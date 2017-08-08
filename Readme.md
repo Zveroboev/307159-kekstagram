@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Зверобоев](https://up.htmlacademy.ru/javascript/10/user/307159).
-* Наставник: `Неизвестно`.
+* Наставник: [Леонид Лебедев](https://htmlacademy.ru/profile/leonidlebedev).
 
 ---
 
