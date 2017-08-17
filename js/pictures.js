@@ -13,24 +13,34 @@ var PICTURES_COMMENTS = [
 ];
 
 function getRandomValue(min, max) {
-  return Math.floor(Math.random() * (max + 1 - min)) + min;
+  return Math.floor(Math.random() * ((max + 1) - min)) + min;
 }
 
 function getRandomIndex(number) {
   return Math.floor(Math.random() * number);
 }
 
-function getPicturesArray(number) {
-  var picturesArray = [];
+function getPostsArray(number) {
+  var postsArray = [];
 
   for (var i = 0; i < number; i++) {
-    picturesArray.push({
+    postsArray.push({
       url: 'photos/{{' + (i + 1) + '}}.jpg',
       likes: getRandomValue(MIN_LIKES, MAX_LIKES),
       comment: PICTURES_COMMENTS[getRandomIndex(PICTURES_COMMENTS.length)]
     });
   }
-  return picturesArray;
+  return postsArray;
 }
 
-console.log(getPicturesArray(NUMBER_PHOTOS));
+function renderPost(posts) {
+  var postElement = pictureTemplate.cloneNode(true);
+
+  postElement.querySelector('img').setAttribute('src', posts.url);
+  postElement.querySelector('.picture-likes').textContent = posts.likes;
+  postElement.querySelector('.picture-comments').textContent = posts.comment;
+  return postElement;
+}
+
+var posts = getPostsArray(NUMBER_PHOTOS);
+var pictureTemplate = document.querySelector('#picture-template').content;
