@@ -1,6 +1,6 @@
 'use strict';
 
-// Нужно ли эти константы объеденить в один объект?
+// Нужно ли  все эти 4 константы объеденить в один объект?
 var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 
@@ -85,10 +85,13 @@ function showGallery(arrayElement) {
 function renderPosts() {
   var posts = getPostsArray(PHOTO_QUANTITY);
   var picturesElement = document.querySelector('.pictures');
+  var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < PHOTO_QUANTITY; i++) {
-    picturesElement.appendChild(renderPostStructure(posts[i]));
+    fragment.appendChild(renderPostStructure(posts[i]));
   }
+  picturesElement.appendChild(fragment);
+
   return posts;
 }
 
