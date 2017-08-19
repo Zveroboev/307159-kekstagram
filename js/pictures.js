@@ -61,8 +61,8 @@ function renderPostStructure(posts) {
   var postStructure = document.querySelector('#picture-template').content.cloneNode(true);
 
   postStructure.querySelector('img').setAttribute('src', posts.url);
-  postStructure.querySelector('.picture-likes').textContent = posts.likes;
-  postStructure.querySelector('.picture-comments').textContent = posts.comment.length;
+  postStructure.querySelector('.picture-likes').textContent = posts.likes.toString();
+  postStructure.querySelector('.picture-comments').textContent = posts.comment.length.toString();
 
   return postStructure;
 }
@@ -72,8 +72,8 @@ function showGallery(arrayElement) {
 
   galleryElement.classList.remove('hidden');
   galleryElement.querySelector('.gallery-overlay-image').setAttribute('src', arrayElement.url);
-  galleryElement.querySelector('.likes-count').textContent = arrayElement.likes;
-  galleryElement.querySelector('.comments-count').textContent = arrayElement.comment.length;
+  galleryElement.querySelector('.likes-count').textContent = arrayElement.likes.toString();
+  galleryElement.querySelector('.comments-count').textContent = arrayElement.comment.length.toString();
 }
 
 function renderPosts() {
@@ -86,7 +86,7 @@ function renderPosts() {
   }
   picturesElement.appendChild(fragment);
 
-  // showGallery(posts[0]);
+  showGallery(posts[0]);
 }
 
 renderPosts();
