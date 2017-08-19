@@ -67,14 +67,9 @@ function renderPostStructure(posts) {
   return postStructure;
 }
 
-function hideUploadForm() {
-  document.querySelector('.upload-form').classList.add('hidden');
-}
-
 function showGallery(arrayElement) {
   var galleryElement = document.querySelector('.gallery-overlay');
 
-  hideUploadForm();
   galleryElement.classList.remove('hidden');
   galleryElement.querySelector('.gallery-overlay-image').setAttribute('src', arrayElement.url);
   galleryElement.querySelector('.likes-count').textContent = arrayElement.likes;
@@ -91,7 +86,7 @@ function renderPosts() {
   }
   picturesElement.appendChild(fragment);
 
-  showGallery(posts[0]);
+  // showGallery(posts[0]);
 }
 
 renderPosts();
