@@ -12,7 +12,7 @@ var PICTURES_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-function getRandomValue(min, max) {
+function getRandomValueInRange(min, max) {
   return Math.floor(Math.random() * ((max + 1) - min)) + min;
 }
 
@@ -25,21 +25,13 @@ function getRandomComments(number) {
   var repeatedIndex = -1;
 
   for (var i = 0; i < number; i++) {
-    var randomIndex = getRandomIndex(PICTURES_COMMENTS.length);
+    do {
+      var randomIndex = getRandomIndex(PICTURES_COMMENTS.length);
+    } while (randomIndex === repeatedIndex);
 
-    if (randomIndex === repeatedIndex) {
-      for (var j = 0; ; j++) {
-        randomIndex = getRandomIndex(PICTURES_COMMENTS.length);
-        if (randomIndex !== repeatedIndex) {
-          break;
-        }
-      }
-      comments.push(PICTURES_COMMENTS[randomIndex]);
-      repeatedIndex = randomIndex;
-    } else {
-      comments.push(PICTURES_COMMENTS[randomIndex]);
-      repeatedIndex = randomIndex;
-    }
+    comments.push(PICTURES_COMMENTS[randomIndex]);
+    repeatedIndex = randomIndex;
+
   }
   return comments;
 }
@@ -50,8 +42,8 @@ function getPostsArray(number) {
   for (var i = 0; i < number; i++) {
     postsArray.push({
       url: 'photos/' + (i + 1) + '.jpg',
-      likes: getRandomValue(MIN_LIKES, MAX_LIKES),
-      comment: getRandomComments(getRandomValue(1, 2))
+      likes: getRandomValueInRange(MIN_LIKES, MAX_LIKES),
+      comment: getRandomComments(getRandomValueInRange(1, 2))
     });
   }
   return postsArray;
