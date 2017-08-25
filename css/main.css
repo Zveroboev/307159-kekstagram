@@ -544,11 +544,13 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   overflow: hidden;
 
   text-align: center;
+  cursor: pointer;
 }
 
 .picture img {
   height: 182px;
   margin-bottom: -34px;
+
 
   border: 0;
 }
