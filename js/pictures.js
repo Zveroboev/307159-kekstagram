@@ -25,23 +25,6 @@ function getRandomIndex(number) {
   return Math.floor(Math.random() * number);
 }
 
-function getReplacedElements(array) {
-  var count = {};
-  var res = 0;
-
-  for (var i = 0; i < array.length; i++) {
-    count[array[i]] = ~~count[array[i]] + 1;
-  }
-
-  for (i in count) {
-    if (count.hasOwnProperty(i) && count[i] > 1) {
-      res += count[i];
-    }
-  }
-
-  return res;
-}
-
 function getRandomComments(number) {
   var comments = [];
   var repeatedIndexes = [];
@@ -295,33 +278,70 @@ function sayAboutValidityDescription(evt) {
 
 function sayAboutValidityHashtags(evt) {
   var arrayWithHastags = evt.target.value.split(' ');
-  var longHastags = 0;
-  var withoutSharp = 0;
-  var severalSharp = 0;
-
-  for (var i = 0; i < arrayWithHastags.length; i++) {
-    if (arrayWithHastags[i].length > 20) {
-      longHastags++;
-    } else if (arrayWithHastags[i].slice(0, 1) !== '#') {
-      withoutSharp++;
-    } else if (arrayWithHastags[i].indexOf('#', 1) !== -1) {
-      severalSharp++;
-    }
-  }
 
   if (arrayWithHastags.length > 5) {
     evt.target.setCustomValidity('Максимум можно использовать 5 хеш-тегов');
-  } else if (longHastags > 0) {
+  } else if (getSumLongElements(arrayWithHastags, 20) > 0) {
     evt.target.setCustomValidity('Максимальная длина одного хэш-тега 20 символов');
-  } else if (withoutSharp > 0) {
+  } else if (getSumElementsWithoutSharp(arrayWithHastags) > 0) {
     evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
-  } else if (severalSharp > 0) {
+  } else if (getSumElementsWithSeveralSharp(arrayWithHastags) > 0) {
     evt.target.setCustomValidity('Хэш-теги разделяются пробелами');
-  } else if (getReplacedElements(arrayWithHastags) > 0) {
+  } else if (getSumReplacedElements(arrayWithHastags) > 0) {
     evt.target.setCustomValidity('Хэш-теги не должны повторяться');
   } else {
     evt.target.setCustomValidity('');
   }
+}
+
+function getSumReplacedElements(array) {
+  var count = {};
+  var res = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    count[array[i]] = ~~count[array[i]] + 1;
+  }
+
+  for (i in count) {
+    if (count.hasOwnProperty(i) && count[i] > 1) {
+      res += count[i];
+    }
+  }
+
+  return res;
+}
+
+function getSumLongElements(array, maxLength) {
+  var res = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].length > maxLength) {
+      res++;
+    }
+  }
+  return res;
+}
+
+function getSumElementsWithoutSharp(array) {
+  var res = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].slice(0, 1) !== '#') {
+      res++;
+    }
+  }
+  return res;
+}
+
+function getSumElementsWithSeveralSharp(array) {
+  var res = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i].indexOf('#', 1) !== -1) {
+      res++;
+    }
+  }
+  return res;
 }
 
 uploadForm.addEventListener('input', sayAboutValidity);
