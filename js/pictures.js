@@ -79,6 +79,7 @@ function renderPosts() {
 renderPosts();
 
 /* ....................................................................... */
+
 // Открытие Попапа с постом по клику на этот пост
 function openPopup(evt) {
   var target = evt.target;
@@ -160,12 +161,7 @@ var inputFile = document.querySelector('#upload-file');
 var uploadForm = document.querySelector('.upload-form');
 var uploadFormCancel = uploadForm.querySelector('.upload-form-cancel');
 
-var uploadResizeControls = uploadForm.querySelector('.upload-resize-controls');
-var inputResize = uploadResizeControls.querySelector('.upload-resize-controls-value');
-var buttonInc = uploadResizeControls.querySelector('.upload-resize-controls-button-inc');
-var buttonDec = uploadResizeControls.querySelector('.upload-resize-controls-button-dec');
-
-var uploadEffectsControls = uploadForm.querySelector('.upload-effect-controls');
+var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
 
 var inputDescription = uploadForm.querySelector('.upload-form-description');
 var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
@@ -209,14 +205,28 @@ function closeUploadOverlayOnPressEsc(evt) {
 
 inputFile.addEventListener('change', openUploadOverlay);
 
+// Наложение фильтров на фотографию
+function setPhotoFilter(evt) {
+  var deletedFromValueId = 'upload-';
+
+  evt.currentTarget.querySelector('img').className = evt.target.getAttribute('id').substring(deletedFromValueId.length);
+}
+
+uploadForm.addEventListener('change', setPhotoFilter);
 
 // Логика работы input'a изменения масштаба
 function setInputAction() {
+  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
+
   buttonInc.addEventListener('click', onButtonClickIncrementValue);
   buttonDec.addEventListener('click', onButtonClickDecrementValue);
 }
 
 function removeInputAction() {
+  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
+
   buttonInc.removeEventListener('click', onButtonClickIncrementValue);
   buttonDec.removeEventListener('click', onButtonClickDecrementValue);
 
@@ -224,16 +234,16 @@ function removeInputAction() {
 }
 
 function onButtonClickIncrementValue() {
-  inputResize.value = +inputResize.value + +inputResize.dataset.step;
-  if (inputResize.value >= +inputResize.dataset.max) {
-    inputResize.value = +inputResize.dataset.max;
+  inputResize.value = parseInt(inputResize.value, 10) + parseInt(inputResize.dataset.step, 10);
+  if (inputResize.value >= parseInt(inputResize.dataset.max, 10)) {
+    inputResize.value = parseInt(inputResize.dataset.max, 10);
   }
 }
 
 function onButtonClickDecrementValue() {
-  inputResize.value = +inputResize.value - +inputResize.dataset.step;
-  if (inputResize.value <= +inputResize.dataset.min) {
-    inputResize.value = +inputResize.dataset.min;
+  inputResize.value = parseInt(inputResize.value, 10) - parseInt(inputResize.dataset.step, 10);
+  if (inputResize.value <= parseInt(inputResize.dataset.min, 10)) {
+    inputResize.value = parseInt(inputResize.dataset.min, 10);
   }
 }
 
@@ -271,7 +281,3 @@ function sayAboutWrongLength(evt) {
 }
 
 uploadForm.addEventListener('input', sayAboutValidity);
-
-
-
-uploadEffectsControls.addEventListener('click', setPhotoFilter);
