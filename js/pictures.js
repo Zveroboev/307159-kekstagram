@@ -16,6 +16,14 @@ var KEYCODES = {
   ENTER_KEYCODE: 13
 };
 
+function hideBodyScroll() {
+  document.querySelector('body').style.overflow = 'hidden';
+}
+
+function showBodyScroll() {
+  document.querySelector('body').style.overflow = 'auto';
+}
+
 // Создание постов на index.html
 function getRandomValueInRange(min, max) {
   return Math.floor(Math.random() * ((max + 1) - min)) + min;
@@ -89,6 +97,7 @@ function openPopup(evt) {
     if (target.tagName.toLowerCase() === 'a' && target.classList.contains('picture')) {
       renderPopup(target);
       addEventsForOpeningPopup();
+      hideBodyScroll();
       return;
     }
   }
@@ -98,6 +107,7 @@ function openPopup(evt) {
 function closePopup() {
   document.querySelector('.gallery-overlay').classList.add('hidden');
   addEventsForClosingPopup();
+  showBodyScroll();
 }
 
 function openPopupOnKeyDown(evt) {
@@ -178,6 +188,7 @@ function openUploadOverlay() {
   document.addEventListener('keydown', closeUploadOverlayOnPressEsc);
 
   setInputAction(inputResize);
+  hideBodyScroll();
 }
 
 function closeUploadOverlay() {
@@ -190,6 +201,7 @@ function closeUploadOverlay() {
   document.removeEventListener('keydown', closeUploadOverlayOnPressEsc);
 
   removeInputAction(inputResize);
+  showBodyScroll();
 }
 
 function closeUploadOverlayOnKeyDown(evt) {
