@@ -184,6 +184,7 @@ var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
 
 function openUploadOverlay() {
+  uploadForm.querySelector('img').className = 'effect-none';
   uploadForm.querySelector('.upload-image').classList.add('hidden');
   uploadForm.querySelector('.upload-overlay').classList.remove('hidden');
 
@@ -197,6 +198,7 @@ function openUploadOverlay() {
 }
 
 function closeUploadOverlay() {
+  uploadForm.querySelector('img').style.transform = 'scale(1)';
   uploadForm.querySelector('.upload-image').classList.remove('hidden');
   uploadForm.querySelector('.upload-overlay').classList.add('hidden');
 

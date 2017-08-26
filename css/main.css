@@ -211,6 +211,10 @@ body {
   background: rgba(255, 255, 255, 0.2) url("../img/icon-cross.png") center no-repeat;
 }
 
+.upload-form-cancel:hover {
+  cursor: pointer;
+}
+
 .upload-form-cancel:active {
   transform: translateY(1px);
 }
@@ -262,6 +266,11 @@ body {
 
 .upload-resize-controls-button-inc {
   border-radius: 0 50% 50% 0;
+}
+
+.upload-resize-controls-button-inc:hover,
+.upload-resize-controls-button-dec:hover {
+  cursor: pointer;
 }
 
 /* Эффекты */
@@ -438,6 +447,10 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   background: rgba(255, 231, 82, 0.2);
   border: 0;
   border-radius: 4px;
+}
+
+.upload-form-submit:hover {
+  cursor: pointer;
 }
 
 .upload-form-description:focus:invalid,
