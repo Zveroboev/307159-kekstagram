@@ -162,6 +162,7 @@ var uploadForm = document.querySelector('.upload-form');
 var uploadFormCancel = uploadForm.querySelector('.upload-form-cancel');
 
 var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
+var uploadFormControls = uploadForm.querySelector('.upload-effect-controls');
 
 var inputDescription = uploadForm.querySelector('.upload-form-description');
 var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
@@ -209,10 +210,10 @@ inputFile.addEventListener('change', openUploadOverlay);
 function setPhotoFilter(evt) {
   var deletedFromValueId = 'upload-';
 
-  evt.currentTarget.querySelector('img').className = evt.target.getAttribute('id').substring(deletedFromValueId.length);
+  uploadForm.querySelector('img').className = evt.target.getAttribute('id').substring(deletedFromValueId.length);
 }
 
-uploadForm.addEventListener('change', setPhotoFilter);
+uploadFormControls.addEventListener('change', setPhotoFilter);
 
 // Логика работы input'a изменения масштаба
 function setInputAction() {
@@ -257,17 +258,48 @@ function resizeImage() {
 // Валидация input'ов
 function sayAboutValidity(evt) {
   if (evt.target === inputDescription) {
-    sayAboutWrongLength(evt);
+    sayAboutValidityDescription(evt);
+  } else if (evt.target === inputHashtags) {
+    sayAboutValidityHashtags(evt);
   }
 }
 
-function sayAboutWrongLength(evt) {
+function sayAboutValidityDescription(evt) {
   if (evt.target.validity.tooShort) {
     evt.target.setCustomValidity('Поле должно содержать минимум: ' + evt.target.minLength + ' символов');
   } else if (evt.target.validity.tooLong) {
     evt.target.setCustomValidity('Поле должно содержать максимум: ' + evt.target.maxLength + ' символов');
   } else if (evt.target.validity.valueMissing) {
     evt.target.setCustomValidity('Введите комментарий');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+}
+
+function sayAboutValidityHashtags(evt) {
+  var arrayWithHastags = evt.target.value.split(' ');
+  var arrayWithLongHastags = [];
+  var arrayWithoutSharp = [];
+  var arrayWithSeveralSharp = [];
+
+  for (var i = 0; i < arrayWithHastags.length; i++) {
+    if (arrayWithHastags[i].length > 20) {
+      arrayWithLongHastags.push(arrayWithHastags[i]);
+    } else if (arrayWithHastags[i].slice(0, 1) !== '#') {
+      arrayWithoutSharp.push(arrayWithHastags[i]);
+    } else if (arrayWithHastags[i].indexOf('#', 1) !== -1) {
+      arrayWithSeveralSharp.push(arrayWithHastags[i]);
+    }
+  }
+
+  if (arrayWithHastags.length > 5) {
+    evt.target.setCustomValidity('Максимум можно использовать 5 хеш-тегов');
+  } else if (arrayWithLongHastags.length > 0) {
+    evt.target.setCustomValidity('Максимальная длина одного хэш-тега 20 символов');
+  } else if (arrayWithoutSharp.length > 0) {
+    evt.target.setCustomValidity('Хэш-тег начинается с символа /`#/`');
+  } else if (arrayWithSeveralSharp.length > 0) {
+    evt.target.setCustomValidity('Хэш-теги разделяются пробелами');
   } else {
     evt.target.setCustomValidity('');
   }
