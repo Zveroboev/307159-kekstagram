@@ -238,6 +238,7 @@ function onButtonClickIncrementValue() {
   if (inputResize.value >= parseInt(inputResize.dataset.max, 10)) {
     inputResize.value = parseInt(inputResize.dataset.max, 10);
   }
+  resizeImage();
 }
 
 function onButtonClickDecrementValue() {
@@ -245,26 +246,18 @@ function onButtonClickDecrementValue() {
   if (inputResize.value <= parseInt(inputResize.dataset.min, 10)) {
     inputResize.value = parseInt(inputResize.dataset.min, 10);
   }
+  resizeImage();
 }
+
+function resizeImage() {
+  uploadForm.querySelector('img').style.transform = 'scale(' + inputResize.value / 100 + ')';
+}
+
 
 // Валидация input'ов
 function sayAboutValidity(evt) {
-  if (evt.target === inputResize) {
-    sayAboutWrongNumber(evt);
-  } else if (evt.target === inputDescription) {
+  if (evt.target === inputDescription) {
     sayAboutWrongLength(evt);
-  }
-}
-
-function sayAboutWrongNumber(evt) {
-  if (parseInt(evt.target.value, 10) < parseInt(evt.target.dataset.min, 10)) {
-    evt.target.setCustomValidity('Минимальное значение: ' + evt.target.dataset.min);
-  } else if (parseInt(evt.target.value, 10) > parseInt(evt.target.dataset.max, 10)) {
-    evt.target.setCustomValidity('Максимальное значение: ' + evt.target.dataset.max);
-  } else if ((parseInt(evt.target.value, 10) % parseInt(evt.target.dataset.step, 10)) !== 0) {
-    evt.target.setCustomValidity('Шаг должен быть равен: ' + evt.target.dataset.step);
-  } else {
-    evt.target.setCustomValidity('');
   }
 }
 
