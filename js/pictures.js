@@ -16,6 +16,7 @@ var KEYCODES = {
   ENTER_KEYCODE: 13
 };
 
+// Создание постов на index.html
 function getRandomValueInRange(min, max) {
   return Math.floor(Math.random() * ((max + 1) - min)) + min;
 }
@@ -78,13 +79,13 @@ function renderPosts() {
 renderPosts();
 
 /* ....................................................................... */
-
+// Открытие Попапа с постом по клику на этот пост
 function openPopup(evt) {
   var target = evt.target;
 
   while (target.parentNode !== evt.currentTarget) {
     target = target.parentNode;
-    if (target.tagName === 'A' && target.classList.contains('picture')) {
+    if (target.tagName.toLowerCase() === 'a' && target.classList.contains('picture')) {
       renderPopup(target);
       addEventsForOpeningPopup();
       return;
@@ -100,7 +101,7 @@ function closePopup() {
 
 function openPopupOnKeyDown(evt) {
   if (evt.keyCode === KEYCODES.ENTER_KEYCODE) {
-    openPopup(evt); // если не передаю событие, то дальше evt.target = undef
+    openPopup(evt);
   }
 }
 
@@ -152,3 +153,125 @@ var picturesContainer = document.querySelector('.pictures');
 
 picturesContainer.addEventListener('click', openPopup);
 picturesContainer.addEventListener('keydown', openPopupOnKeyDown);
+
+/* ....................................................................... */
+// Открытие формы обработки загруженной фотографии
+var inputFile = document.querySelector('#upload-file');
+var uploadForm = document.querySelector('.upload-form');
+var uploadFormCancel = uploadForm.querySelector('.upload-form-cancel');
+
+var uploadResizeControls = uploadForm.querySelector('.upload-resize-controls');
+var inputResize = uploadResizeControls.querySelector('.upload-resize-controls-value');
+var buttonInc = uploadResizeControls.querySelector('.upload-resize-controls-button-inc');
+var buttonDec = uploadResizeControls.querySelector('.upload-resize-controls-button-dec');
+
+var uploadEffectsControls = uploadForm.querySelector('.upload-effect-controls');
+
+var inputDescription = uploadForm.querySelector('.upload-form-description');
+var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
+
+
+function openUploadOverlay() {
+  uploadForm.querySelector('.upload-image').classList.add('hidden');
+  uploadForm.querySelector('.upload-overlay').classList.remove('hidden');
+
+  // Вешаю обработчики закрытия
+  uploadFormCancel.addEventListener('click', closeUploadOverlay);
+  uploadFormCancel.addEventListener('keydown', closeUploadOverlayOnKeyDown);
+  document.addEventListener('keydown', closeUploadOverlayOnPressEsc);
+
+  setInputAction(inputResize);
+}
+
+function closeUploadOverlay() {
+  uploadForm.querySelector('.upload-image').classList.remove('hidden');
+  uploadForm.querySelector('.upload-overlay').classList.add('hidden');
+
+  // Удаляю обработчики закрытия
+  uploadFormCancel.removeEventListener('click', closeUploadOverlay);
+  uploadFormCancel.removeEventListener('keydown', closeUploadOverlayOnKeyDown);
+  document.removeEventListener('keydown', closeUploadOverlayOnPressEsc);
+
+  removeInputAction(inputResize);
+}
+
+function closeUploadOverlayOnKeyDown(evt) {
+  if (evt.keyCode === KEYCODES.ENTER_KEYCODE) {
+    closeUploadOverlay();
+  }
+}
+
+function closeUploadOverlayOnPressEsc(evt) {
+  if (evt.keyCode === KEYCODES.ESC_KEYCODE && evt.target !== inputDescription && evt.target !== inputHashtags) {
+    closeUploadOverlay();
+  }
+}
+
+inputFile.addEventListener('change', openUploadOverlay);
+
+
+// Логика работы input'a изменения масштаба
+function setInputAction() {
+  buttonInc.addEventListener('click', onButtonClickIncrementValue);
+  buttonDec.addEventListener('click', onButtonClickDecrementValue);
+}
+
+function removeInputAction() {
+  buttonInc.removeEventListener('click', onButtonClickIncrementValue);
+  buttonDec.removeEventListener('click', onButtonClickDecrementValue);
+
+  inputResize.value = inputResize.dataset.min;
+}
+
+function onButtonClickIncrementValue() {
+  inputResize.value = +inputResize.value + +inputResize.dataset.step;
+  if (inputResize.value >= +inputResize.dataset.max) {
+    inputResize.value = +inputResize.dataset.max;
+  }
+}
+
+function onButtonClickDecrementValue() {
+  inputResize.value = +inputResize.value - +inputResize.dataset.step;
+  if (inputResize.value <= +inputResize.dataset.min) {
+    inputResize.value = +inputResize.dataset.min;
+  }
+}
+
+// Валидация input'ов
+function sayAboutValidity(evt) {
+  if (evt.target === inputResize) {
+    sayAboutWrongNumber(evt);
+  } else if (evt.target === inputDescription) {
+    sayAboutWrongLength(evt);
+  }
+}
+
+function sayAboutWrongNumber(evt) {
+  if (parseInt(evt.target.value, 10) < parseInt(evt.target.dataset.min, 10)) {
+    evt.target.setCustomValidity('Минимальное значение: ' + evt.target.dataset.min);
+  } else if (parseInt(evt.target.value, 10) > parseInt(evt.target.dataset.max, 10)) {
+    evt.target.setCustomValidity('Максимальное значение: ' + evt.target.dataset.max);
+  } else if ((parseInt(evt.target.value, 10) % parseInt(evt.target.dataset.step, 10)) !== 0) {
+    evt.target.setCustomValidity('Шаг должен быть равен: ' + evt.target.dataset.step);
+  } else {
+    evt.target.setCustomValidity('');
+  }
+}
+
+function sayAboutWrongLength(evt) {
+  if (evt.target.validity.tooShort) {
+    evt.target.setCustomValidity('Поле должно содержать минимум: ' + evt.target.minLength + ' символов');
+  } else if (evt.target.validity.tooLong) {
+    evt.target.setCustomValidity('Поле должно содержать максимум: ' + evt.target.maxLength + ' символов');
+  } else if (evt.target.validity.valueMissing) {
+    evt.target.setCustomValidity('Введите комментарий');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+}
+
+uploadForm.addEventListener('input', sayAboutValidity);
+
+
+
+uploadEffectsControls.addEventListener('click', setPhotoFilter);

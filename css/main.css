@@ -440,6 +440,14 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   border-radius: 4px;
 }
 
+.upload-form-description:focus:invalid,
+.upload-form-hashtags:focus:invalid,
+.upload-resize-controls-value:focus:invalid{
+  box-shadow: 0 0 10px red;
+  outline: none;
+}
+
+
 .upload-form-submit:active {
   transform: translateY(1px);
 }
