@@ -16,6 +16,11 @@ var KEYCODES = {
   ENTER_KEYCODE: 13
 };
 
+var HASH_TAGS_VALIDITY = {
+  MAX_LENGTH: 20,
+  MAX_HASHTAGS: 5
+};
+
 function hideBodyScroll() {
   document.querySelector('body').style.overflow = 'hidden';
 }
@@ -291,10 +296,10 @@ function sayAboutValidityDescription(evt) {
 function sayAboutValidityHashtags(evt) {
   var arrayWithHastags = evt.target.value.split(' ');
 
-  if (arrayWithHastags.length > 5) {
-    evt.target.setCustomValidity('Максимум можно использовать 5 хеш-тегов');
-  } else if (getSumLongElements(arrayWithHastags, 20) > 0) {
-    evt.target.setCustomValidity('Максимальная длина одного хэш-тега 20 символов');
+  if (arrayWithHastags.length > HASH_TAGS_VALIDITY.MAX_HASHTAGS) {
+    evt.target.setCustomValidity('Максимум можно использовать' + HASH_TAGS_VALIDITY.MAX_HASHTAGS + 'хеш-тегов');
+  } else if (getSumLongElements(arrayWithHastags, HASH_TAGS_VALIDITY.MAX_LENGTH) > 0) {
+    evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASH_TAGS_VALIDITY.MAX_LENGTH + 'символов');
   } else if (getSumElementsWithoutSharp(arrayWithHastags) > 0) {
     evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
   } else if (getSumElementsWithSeveralSharp(arrayWithHastags) > 0) {
