@@ -184,7 +184,11 @@ var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
 
 function openUploadOverlay() {
+  // Задаю эффекты по умолчанию для загруженного изображения
   uploadForm.querySelector('img').className = 'effect-none';
+  uploadForm.querySelector('img').style.transform = 'scale(1)';
+
+  // Показываю форму кадрирования
   uploadForm.querySelector('.upload-image').classList.add('hidden');
   uploadForm.querySelector('.upload-overlay').classList.remove('hidden');
 
@@ -193,12 +197,18 @@ function openUploadOverlay() {
   uploadFormCancel.addEventListener('keydown', closeUploadOverlayOnKeyDown);
   document.addEventListener('keydown', closeUploadOverlayOnPressEsc);
 
+  // Вешаю обработчики для элементов внутри попапа
+  uploadFormControls.addEventListener('change', setPhotoFilter);
+  uploadForm.addEventListener('input', sayAboutValidity);
+
+  // Вешаю обработчики для кнопок масштабирования загруженного изображения
   setInputAction(inputResize);
+
   hideBodyScroll();
 }
 
 function closeUploadOverlay() {
-  uploadForm.querySelector('img').style.transform = 'scale(1)';
+  // Скрываю форму кадрирования
   uploadForm.querySelector('.upload-image').classList.remove('hidden');
   uploadForm.querySelector('.upload-overlay').classList.add('hidden');
 
@@ -207,7 +217,13 @@ function closeUploadOverlay() {
   uploadFormCancel.removeEventListener('keydown', closeUploadOverlayOnKeyDown);
   document.removeEventListener('keydown', closeUploadOverlayOnPressEsc);
 
+  // Вешаю обработчики для элементов внутри попапа
+  uploadFormControls.removeEventListener('change', setPhotoFilter);
+  uploadForm.removeEventListener('input', sayAboutValidity);
+
+  // Вешаю обработчики для кнопок масштабирования загруженного изображения
   removeInputAction(inputResize);
+
   showBodyScroll();
 }
 
@@ -230,9 +246,8 @@ function setPhotoFilter(evt) {
   uploadForm.querySelector('img').className = evt.target.dataset.filter;
 }
 
-uploadFormControls.addEventListener('change', setPhotoFilter);
-
 // Логика работы input'a изменения масштаба
+// Вешаю обработчики для кнопок масштабирования
 function setInputAction() {
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
   var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
@@ -241,6 +256,7 @@ function setInputAction() {
   buttonDec.addEventListener('click', onButtonClickDecrementValue);
 }
 
+// Удаляю обработчики для кнопок масштабирования
 function removeInputAction() {
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
   var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
@@ -281,6 +297,7 @@ function sayAboutValidity(evt) {
   }
 }
 
+// Валидация текстового поля ввода комментария
 function sayAboutValidityDescription(evt) {
   if (evt.target.validity.tooShort) {
     evt.target.setCustomValidity('Поле должно содержать минимум: ' + evt.target.minLength + ' символов');
@@ -293,6 +310,7 @@ function sayAboutValidityDescription(evt) {
   }
 }
 
+// Валидация поля ввода хеш-тегов
 function sayAboutValidityHashtags(evt) {
   var arrayWithHastags = evt.target.value.split(' ');
 
@@ -311,6 +329,7 @@ function sayAboutValidityHashtags(evt) {
   }
 }
 
+// Дополнительные функции для валидации хеш-тегов
 function hasLongElements(array, maxLength) {
   for (var i = 0; i < array.length; i++) {
     if (array[i].length > maxLength) {
@@ -349,5 +368,3 @@ function hasDuplicateElement(array) {
   }
   return false;
 }
-
-uploadForm.addEventListener('input', sayAboutValidity);
