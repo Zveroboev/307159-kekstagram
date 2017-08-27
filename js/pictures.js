@@ -185,7 +185,7 @@ var inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
 function openUploadOverlay() {
   // Задаю эффекты по умолчанию для загруженного изображения
-  uploadForm.querySelector('img').className = 'effect-none';
+  uploadForm.querySelector('img').className = '';
   uploadForm.querySelector('img').style.transform = 'scale(1)';
 
   // Показываю форму кадрирования
@@ -314,11 +314,13 @@ function sayAboutValidityDescription(evt) {
 function sayAboutValidityHashtags(evt) {
   var arrayWithHastags = evt.target.value.split(' ');
 
-  if (arrayWithHastags.length > HASH_TAGS_VALIDITY.MAX_HASHTAGS) {
+  if (evt.target.value.trim().length === 0) {
+    evt.target.setCustomValidity('');
+  } else if (arrayWithHastags.length > HASH_TAGS_VALIDITY.MAX_HASHTAGS) {
     evt.target.setCustomValidity('Максимум можно использовать' + HASH_TAGS_VALIDITY.MAX_HASHTAGS + 'хеш-тегов');
   } else if (hasLongElements(arrayWithHastags, HASH_TAGS_VALIDITY.MAX_LENGTH)) {
     evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASH_TAGS_VALIDITY.MAX_LENGTH + 'символов');
-  } else if (hasElementsWithoutSharp(arrayWithHastags) && arrayWithHastags.toString()) {
+  } else if (hasElementsWithoutSharp(arrayWithHastags)) {
     evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
   } else if (hasElementsWithSeveralSharp(arrayWithHastags)) {
     evt.target.setCustomValidity('Хэш-теги разделяются пробелами');
