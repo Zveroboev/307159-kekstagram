@@ -22,11 +22,11 @@ var HASH_TAGS_VALIDITY = {
 };
 
 function hideBodyScroll() {
-  document.querySelector('body').style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
 }
 
 function showBodyScroll() {
-  document.querySelector('body').style.overflow = 'auto';
+  document.body.style.overflow = 'auto';
 }
 
 // Создание постов на index.html
@@ -99,7 +99,7 @@ function openPopup(evt) {
 
   while (target.parentNode !== evt.currentTarget) {
     target = target.parentNode;
-    if (target.tagName.toLowerCase() === 'a' && target.classList.contains('picture')) {
+    if (target.classList.contains('picture')) {
       renderPopup(target);
       addEventsForOpeningPopup();
       hideBodyScroll();
@@ -227,9 +227,7 @@ inputFile.addEventListener('change', openUploadOverlay);
 
 // Наложение фильтров на фотографию
 function setPhotoFilter(evt) {
-  var deletedFromValueId = 'upload-';
-
-  uploadForm.querySelector('img').className = evt.target.getAttribute('id').substring(deletedFromValueId.length);
+  uploadForm.querySelector('img').className = evt.target.dataset.filter;
 }
 
 uploadFormControls.addEventListener('change', setPhotoFilter);
@@ -258,7 +256,7 @@ function onButtonClickIncrementValue() {
   if (inputResize.value >= parseInt(inputResize.dataset.max, 10)) {
     inputResize.value = parseInt(inputResize.dataset.max, 10);
   }
-  resizeImage();
+  resizeImage(inputResize.value);
 }
 
 function onButtonClickDecrementValue() {
@@ -266,11 +264,11 @@ function onButtonClickDecrementValue() {
   if (inputResize.value <= parseInt(inputResize.dataset.min, 10)) {
     inputResize.value = parseInt(inputResize.dataset.min, 10);
   }
-  resizeImage();
+  resizeImage(inputResize.value);
 }
 
-function resizeImage() {
-  uploadForm.querySelector('img').style.transform = 'scale(' + inputResize.value / 100 + ')';
+function resizeImage(value) {
+  uploadForm.querySelector('img').style.transform = 'scale(' + value / 100 + ')';
 }
 
 
@@ -300,67 +298,56 @@ function sayAboutValidityHashtags(evt) {
 
   if (arrayWithHastags.length > HASH_TAGS_VALIDITY.MAX_HASHTAGS) {
     evt.target.setCustomValidity('Максимум можно использовать' + HASH_TAGS_VALIDITY.MAX_HASHTAGS + 'хеш-тегов');
-  } else if (getSumLongElements(arrayWithHastags, HASH_TAGS_VALIDITY.MAX_LENGTH) > 0) {
+  } else if (hasLongElements(arrayWithHastags, HASH_TAGS_VALIDITY.MAX_LENGTH)) {
     evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASH_TAGS_VALIDITY.MAX_LENGTH + 'символов');
-  } else if (getSumElementsWithoutSharp(arrayWithHastags) > 0) {
+  } else if (hasElementsWithoutSharp(arrayWithHastags) && arrayWithHastags.toString()) {
     evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
-  } else if (getSumElementsWithSeveralSharp(arrayWithHastags) > 0) {
+  } else if (hasElementsWithSeveralSharp(arrayWithHastags)) {
     evt.target.setCustomValidity('Хэш-теги разделяются пробелами');
-  } else if (getSumReplacedElements(arrayWithHastags) > 0) {
+  } else if (hasDuplicateElement(arrayWithHastags)) {
     evt.target.setCustomValidity('Хэш-теги не должны повторяться');
   } else {
     evt.target.setCustomValidity('');
   }
 }
 
-function getSumReplacedElements(array) {
-  var count = {};
-  var res = 0;
-
-  for (var i = 0; i < array.length; i++) {
-    count[array[i]] = ~~count[array[i]] + 1;
-  }
-
-  for (i in count) {
-    if (count.hasOwnProperty(i) && count[i] > 1) {
-      res += count[i];
-    }
-  }
-
-  return res;
-}
-
-function getSumLongElements(array, maxLength) {
-  var res = 0;
-
+function hasLongElements(array, maxLength) {
   for (var i = 0; i < array.length; i++) {
     if (array[i].length > maxLength) {
-      res++;
+      return true;
     }
   }
-  return res;
+  return false;
 }
 
-function getSumElementsWithoutSharp(array) {
-  var res = 0;
-
+function hasElementsWithoutSharp(array) {
   for (var i = 0; i < array.length; i++) {
     if (array[i].slice(0, 1) !== '#') {
-      res++;
+      return true;
     }
   }
-  return res;
+  return false;
 }
 
-function getSumElementsWithSeveralSharp(array) {
-  var res = 0;
-
+function hasElementsWithSeveralSharp(array) {
   for (var i = 0; i < array.length; i++) {
     if (array[i].indexOf('#', 1) !== -1) {
-      res++;
+      return true;
     }
   }
-  return res;
+  return false;
+}
+
+function hasDuplicateElement(array) {
+  var obj = {};
+
+  for (var i = 0; i < array.length; i++) {
+    if (obj[array[i]]) {
+      return true;
+    }
+    obj[array[i]] = true;
+  }
+  return false;
 }
 
 uploadForm.addEventListener('input', sayAboutValidity);
