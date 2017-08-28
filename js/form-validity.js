@@ -55,6 +55,8 @@
     }
   }
 
+  var HASHTAG = window.CONSTANS.HASHTAGS_VALIDITY;
+
 // Валидация поля ввода хеш-тегов
   function sayAboutValidityHashtags(evt) {
     // Запрет ввода пробела первым символом
@@ -64,10 +66,10 @@
 
     var arrayWithHashtags = evt.target.value.split(' ');
 
-    if (arrayWithHashtags.length > window.POSTS_ATTRIBUTES.MAX_HASHTAGS_QUANTITY) {
-      evt.target.setCustomValidity('Максимум можно использовать' + window.POSTS_ATTRIBUTES.MAX_HASHTAGS_QUANTITY + 'хеш-тегов');
-    } else if (validity.hasLongElements(arrayWithHashtags, window.POSTS_ATTRIBUTES.MAX_HASHTAG_LENGTH)) {
-      evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + window.POSTS_ATTRIBUTES.MAX_HASHTAG_LENGTH + 'символов');
+    if (arrayWithHashtags.length > HASHTAG.MAX_HASHTAGS_QUANTITY) {
+      evt.target.setCustomValidity('Максимум можно использовать' + HASHTAG.MAX_HASHTAGS_QUANTITY + 'хеш-тегов');
+    } else if (validity.hasLongElements(arrayWithHashtags, HASHTAG.MAX_HASHTAG_LENGTH)) {
+      evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASHTAG.MAX_HASHTAG_LENGTH + 'символов');
     } else if (validity.hasElementsWithoutSharp(arrayWithHashtags)) {
       evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
     } else if (validity.hasElementsWithSeveralSharp(arrayWithHashtags)) {
@@ -86,9 +88,5 @@
       sayAboutValidityHashtags(evt);
     }
   };
-
-  // if (evt.target.value.trim().length === 0) {
-  //   evt.target.setCustomValidity('');
-  // } else
 
 })();

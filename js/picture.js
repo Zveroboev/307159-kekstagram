@@ -3,6 +3,8 @@
 // Отрисовка миниатюры с постами на index.html
 (function () {
 
+  var POST = window.CONSTANS.POSTS_ATTRIBUTES;
+
   function renderPostStructure(posts) {
     var postStructure = document.querySelector('#picture-template').content.cloneNode(true);
 
@@ -17,7 +19,7 @@
     var picturesElement = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.POSTS_ATTRIBUTES.PHOTO_QUANTITY; i++) {
+    for (var i = 0; i < POST.PHOTO_QUANTITY; i++) {
       fragment.appendChild(renderPostStructure(window.posts[i]));
     }
     picturesElement.appendChild(fragment);
