@@ -17,9 +17,8 @@
   inputFile.addEventListener('change', openUploadOverlay);
 
   function openUploadOverlay() {
-    // Задаю эффекты по умолчанию для загруженного изображения
     uploadForm.querySelector('img').className = 'effect-none';
-    uploadForm.querySelector('img').style.transform = 'scale(1)';
+    uploadForm.querySelector('img').style.transform = 'none';
 
     // Показываю форму кадрирования
     uploadForm.querySelector('.upload-image').classList.add('hidden');

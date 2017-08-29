@@ -15,7 +15,7 @@
     return postStructure;
   }
 
-  (function renderPosts() {
+  function renderPosts() {
     var picturesElement = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
 
@@ -23,6 +23,7 @@
       fragment.appendChild(renderPostStructure(window.posts[i]));
     }
     picturesElement.appendChild(fragment);
-  })();
+  }
 
+  renderPosts();
 })();

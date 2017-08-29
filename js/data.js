@@ -4,8 +4,6 @@
 (function () {
   var POSTS = window.CONSTANS.POSTS_ATTRIBUTES;
 
-  window.posts = getPostsArray(POSTS.PHOTO_QUANTITY);
-
   function getRandomComments(number) {
     var comments = [];
     var repeatedIndexes = [];
@@ -33,5 +31,7 @@
     }
     return postsArray;
   }
+
+  window.posts = getPostsArray(POSTS.PHOTO_QUANTITY);
 
 })();
