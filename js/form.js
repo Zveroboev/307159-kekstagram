@@ -11,15 +11,17 @@
 
   var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
 
+  var saturationSlider = uploadForm.querySelector('.upload-effect-level');
+  var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
+  var sliderProgressLine = saturationSlider.querySelector('.upload-effect-level-val');
+  var image = uploadForm.querySelector('img');
+
   window.inputDescription = uploadForm.querySelector('.upload-form-description');
   window.inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
   inputFile.addEventListener('change', openUploadOverlay);
 
   function openUploadOverlay() {
-    uploadForm.querySelector('img').className = 'effect-none';
-    uploadForm.querySelector('img').style.transform = 'none';
-
     uploadForm.querySelector('.upload-image').classList.add('hidden');
     uploadForm.querySelector('.upload-overlay').classList.remove('hidden');
 
@@ -30,7 +32,10 @@
     uploadFormControls.addEventListener('change', setPhotoFilter);
     uploadForm.addEventListener('input', window.sayAboutValidity);
 
+    sliderPin.addEventListener('mousedown', moveSaturationSlider);
+
     setInputAction(inputResize);
+    setStandardFilter();
 
     window.util.hideBodyScroll();
 
@@ -46,6 +51,8 @@
 
     uploadFormControls.removeEventListener('change', setPhotoFilter);
     uploadForm.removeEventListener('input', window.sayAboutValidity);
+
+    sliderPin.removeEventListener('mousedown', moveSaturationSlider);
 
     removeInputAction(inputResize);
 
@@ -63,9 +70,10 @@
   }
 
   // Работа элементов внутри формы кадрирования
-  var image = uploadForm.querySelector('img');
 
   function setPhotoFilter(evt) {
+    var StartSaturation = window.CONSTANS.SATURATION.START_SATURATION;
+
     image.className = evt.target.dataset.filter;
 
     if (image.className === 'effect-none') {
@@ -73,8 +81,10 @@
     } else {
       showSaturationSlider();
     }
-    var saturation = uploadForm.querySelector('.upload-effect-level-pin').
-    setFilterSaturation(saturation);
+
+    sliderPin.style.left = StartSaturation + '%';
+    sliderProgressLine.style.width = StartSaturation + '%';
+    setFilterSaturation(StartSaturation);
   }
 
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
@@ -113,12 +123,13 @@
   }
 
   // Реализация перемещения ползунка насыщенности
-  var saturationSlider = uploadForm.querySelector('.upload-effect-level');
   var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
-  var sliderProgressLine = saturationSlider.querySelector('.upload-effect-level-val');
-  var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
-  var minOffset = 0;
-  var maxOffset = 100;
+  var minOffset = window.CONSTANS.SATURATION.MIN_SATURATION;
+  var maxOffset = window.CONSTANS.SATURATION.MAX_SATURATION;
+
+  // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
+  var denominatorForChromeAndSepia = 100;
+  var denominatorForPhobosAndHeat = 33.3;
 
   saturationSlider.classList.add('hidden');
 
@@ -178,23 +189,29 @@
         image.style.filter = '';
         break;
       case 'effect-chrome':
-        image.style.filter = 'grayscale(' + saturation / 100 + ')';
+        image.style.filter = 'grayscale(' + saturation / denominatorForChromeAndSepia + ')';
         break;
       case 'effect-sepia':
-        image.style.filter = 'sepia(' + saturation / 100 + ')';
+        image.style.filter = 'sepia(' + saturation / denominatorForChromeAndSepia + ')';
         break;
       case 'effect-marvin':
         image.style.filter = 'invert(' + saturation + '%)';
         break;
       case 'effect-phobos':
-        image.style.filter = 'blur(' + (saturation / 33.3).toFixed(1) + 'px)';
+        image.style.filter = 'blur(' + (saturation / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
         break;
       case 'effect-heat':
-        image.style.filter = 'brightness(' + (saturation / 33.3).toFixed(1) + ')';
+        image.style.filter = 'brightness(' + (saturation / denominatorForPhobosAndHeat).toFixed(1) + ')';
         break;
     }
   }
 
-  sliderPin.addEventListener('mousedown', moveSaturationSlider);
+  function setStandardFilter() {
+    uploadFormControls.querySelector('#upload-effect-none').checked = true;
+    image.className = 'effect-none';
+    image.style.transform = 'none';
+    image.style.filter = 'none';
+    hideSaturationSlider();
+  }
 
 })();
