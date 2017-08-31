@@ -110,11 +110,13 @@
     uploadForm.querySelector('img').style.transform = 'scale(' + value / 100 + ')';
   }
 
-  //
+  // Реализация перемещения ползунка насыщенности
   var saturationSlider = uploadForm.querySelector('.upload-effect-level');
   var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
   var sliderProgressLine = saturationSlider.querySelector('.upload-effect-level-val');
   var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
+  var minOffset = 0;
+  var maxOffset = 100;
 
   saturationSlider.classList.add('hidden');
 
@@ -126,28 +128,37 @@
     saturationSlider.classList.add('hidden');
   }
 
-  sliderPin.addEventListener('mousedown', moveSaturationSlider);
-
   function moveSaturationSlider(evt) {
     evt.preventDefault();
-    var coordsOfWrap = sliderFullLine.getBoundingClientRect();
+    var sliderCoords = sliderFullLine.getBoundingClientRect();
     var startX = evt.clientX;
+    var lengthAll = sliderCoords.right - sliderCoords.left;
+
 
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
       var shiftX = startX - moveEvt.clientX;
 
       startX = moveEvt.clientX;
+      sliderProgressLine.style.width = sliderPin.style.left;
 
-      if (sliderPin.getBoundingClientRect().left < coordsOfWrap.left) {
-        sliderPin.style.left = '0%';
-        sliderPin.clientX = coordsOfWrap.left;
-      } else if (sliderPin.getBoundingClientRect().right > coordsOfWrap.right) {
-        sliderPin.style.left = '100%';
+      var lengthSegment = startX - sliderCoords.left;
+      var persentOffset = null;
+
+      if (startX < sliderCoords.left) {
+        startX = sliderCoords.left;
+        persentOffset = minOffset;
+        sliderPin.style.left = minOffset + '%';
+      } else if (startX > sliderCoords.right) {
+        startX = sliderCoords.right;
+        persentOffset = maxOffset;
+        sliderPin.style.left = maxOffset + '%';
       } else {
+        persentOffset = ((lengthSegment * maxOffset) / lengthAll).toFixed(1);
         sliderPin.style.left = (sliderPin.offsetLeft - shiftX) + 'px';
       }
 
+      uploadForm.querySelector('img').style.filter = 'grayscale(' + persentOffset / 100 + ')';
     }
 
     function onMouseUp(upEvt) {
@@ -161,5 +172,6 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
+  sliderPin.addEventListener('mousedown', moveSaturationSlider);
 
 })();
