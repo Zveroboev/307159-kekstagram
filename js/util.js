@@ -24,9 +24,11 @@
     HASHTAGS_VALIDITY: {
       MAX_HASHTAG_LENGTH: 20,
       MAX_HASHTAGS_QUANTITY: 5
-    }
+    },
+    SATURATION_START_POSITION: getComputedStyle(document.querySelector('.upload-effect-level-pin')).left
   };
 
+  console.log(CONSTANS.SATURATION_START_POSITION);
   window.util = {
     hideBodyScroll: function () {
       document.body.style.overflow = 'hidden';

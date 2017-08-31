@@ -73,6 +73,8 @@
     } else {
       showSaturationSlider();
     }
+    var saturation = uploadForm.querySelector('.upload-effect-level-pin').
+    setFilterSaturation(saturation);
   }
 
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
@@ -183,6 +185,12 @@
         break;
       case 'effect-marvin':
         image.style.filter = 'invert(' + saturation + '%)';
+        break;
+      case 'effect-phobos':
+        image.style.filter = 'blur(' + (saturation / 33.3).toFixed(1) + 'px)';
+        break;
+      case 'effect-heat':
+        image.style.filter = 'brightness(' + (saturation / 33.3).toFixed(1) + ')';
         break;
     }
   }
