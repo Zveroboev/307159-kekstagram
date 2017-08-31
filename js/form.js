@@ -134,7 +134,6 @@
     var startX = evt.clientX;
     var lengthAll = sliderCoords.right - sliderCoords.left;
 
-
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
       var shiftX = startX - moveEvt.clientX;
@@ -157,8 +156,7 @@
         persentOffset = ((lengthSegment * maxOffset) / lengthAll).toFixed(1);
         sliderPin.style.left = (sliderPin.offsetLeft - shiftX) + 'px';
       }
-
-      uploadForm.querySelector('img').style.filter = 'grayscale(' + persentOffset / 100 + ')';
+      setFilterSaturation(persentOffset);
     }
 
     function onMouseUp(upEvt) {
@@ -170,6 +168,23 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function setFilterSaturation(saturation) {
+    switch (image.className) {
+      case 'effect-none':
+        image.style.filter = '';
+        break;
+      case 'effect-chrome':
+        image.style.filter = 'grayscale(' + saturation / 100 + ')';
+        break;
+      case 'effect-sepia':
+        image.style.filter = 'sepia(' + saturation / 100 + ')';
+        break;
+      case 'effect-marvin':
+        image.style.filter = 'invert(' + saturation + '%)';
+        break;
+    }
   }
 
   sliderPin.addEventListener('mousedown', moveSaturationSlider);
