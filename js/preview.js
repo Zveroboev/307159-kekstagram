@@ -41,20 +41,20 @@
   }
 
   function addEventsForOpeningPopup() {
-    // Вешаю обработчики закрытия
+
     document.querySelector('.gallery-overlay-close').addEventListener('click', closePopup);
     document.querySelector('.gallery-overlay-close').addEventListener('keydown', closePopupOnKeyDown);
     document.addEventListener('keydown', closePopupOnPressEsc);
-    // Удаляю обработчики открытия
+
     picturesContainer.removeEventListener('click', openPopup);
     picturesContainer.removeEventListener('keydown', openPopupOnKeyDown);
   }
 
   function addEventsForClosingPopup() {
-    // Вешаю обработчики открытия
+
     picturesContainer.addEventListener('click', openPopup);
     picturesContainer.addEventListener('keydown', openPopupOnKeyDown);
-    // Удаляю обработчики закрытия
+
     document.querySelector('.gallery-overlay-close').removeEventListener('click', closePopup);
     document.querySelector('.gallery-overlay-close').removeEventListener('keydown', closePopupOnKeyDown);
     document.removeEventListener('keydown', closePopupOnPressEsc);

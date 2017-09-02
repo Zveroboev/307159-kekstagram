@@ -57,7 +57,6 @@
 
 // Валидация поля ввода хеш-тегов
   function sayAboutValidityHashtags(evt) {
-    // Запрет ввода пробела первым символом
     if (evt.target.value === ' ') {
       evt.target.value = '';
     }

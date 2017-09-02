@@ -11,49 +11,49 @@
 
   var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
 
+  var saturationSlider = uploadForm.querySelector('.upload-effect-level');
+  var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
+  var sliderProgressLine = saturationSlider.querySelector('.upload-effect-level-val');
+  var image = uploadForm.querySelector('img');
+
   window.inputDescription = uploadForm.querySelector('.upload-form-description');
   window.inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
   inputFile.addEventListener('change', openUploadOverlay);
 
   function openUploadOverlay() {
-    uploadForm.querySelector('img').className = 'effect-none';
-    uploadForm.querySelector('img').style.transform = 'none';
-
-    // Показываю форму кадрирования
     uploadForm.querySelector('.upload-image').classList.add('hidden');
     uploadForm.querySelector('.upload-overlay').classList.remove('hidden');
 
-    // Вешаю обработчики закрытия
     uploadFormCancel.addEventListener('click', closeUploadOverlay);
     uploadFormCancel.addEventListener('keydown', closeUploadOverlayOnKeyDown);
     document.addEventListener('keydown', closeUploadOverlayOnPressEsc);
 
-    // Вешаю обработчики для элементов внутри попапа
-    uploadFormControls.addEventListener('change', setPhotoFilter);
+    uploadFormControls.addEventListener('change', setFilterType);
     uploadForm.addEventListener('input', window.sayAboutValidity);
 
-    // Вешаю обработчики для кнопок масштабирования загруженного изображения
+    sliderPin.addEventListener('mousedown', moveSaturationSlider);
+
     setInputAction(inputResize);
+    setStandardFilter();
 
     window.util.hideBodyScroll();
+
   }
 
   function closeUploadOverlay() {
-    // Скрываю форму кадрирования
     uploadForm.querySelector('.upload-image').classList.remove('hidden');
     uploadForm.querySelector('.upload-overlay').classList.add('hidden');
 
-    // Удаляю обработчики закрытия
     uploadFormCancel.removeEventListener('click', closeUploadOverlay);
     uploadFormCancel.removeEventListener('keydown', closeUploadOverlayOnKeyDown);
     document.removeEventListener('keydown', closeUploadOverlayOnPressEsc);
 
-    // Удаляю обработчики для элементов внутри попапа
-    uploadFormControls.removeEventListener('change', setPhotoFilter);
+    uploadFormControls.removeEventListener('change', setFilterType);
     uploadForm.removeEventListener('input', window.sayAboutValidity);
 
-    // Удаляю обработчики для кнопок масштабирования загруженного изображения
+    sliderPin.removeEventListener('mousedown', moveSaturationSlider);
+
     removeInputAction(inputResize);
 
     window.util.showBodyScroll();
@@ -70,12 +70,22 @@
   }
 
   // Работа элементов внутри формы кадрирования
-  // Наложение фильтров на фотографию
-  function setPhotoFilter(evt) {
-    uploadForm.querySelector('img').className = evt.target.dataset.filter;
+  function setFilterType(evt) {
+    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
+
+    image.className = evt.target.dataset.filter;
+
+    if (image.className === 'effect-none') {
+      hideSaturationSlider();
+    } else {
+      showSaturationSlider();
+    }
+
+    sliderPin.style.left = startSaturation + '%';
+    sliderProgressLine.style.width = startSaturation + '%';
+    setFilter(startSaturation);
   }
 
-// Вешаю обработчики для кнопок масштабирования
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
   var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 
@@ -84,7 +94,6 @@
     buttonDec.addEventListener('click', onButtonClickDecrementValue);
   }
 
-// Удаляю обработчики для кнопок масштабирования
   function removeInputAction() {
     buttonInc.removeEventListener('click', onButtonClickIncrementValue);
     buttonDec.removeEventListener('click', onButtonClickDecrementValue);
@@ -110,6 +119,97 @@
 
   function resizeImage(value) {
     uploadForm.querySelector('img').style.transform = 'scale(' + value / 100 + ')';
+  }
+
+  // Реализация перемещения ползунка насыщенности
+  var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
+  var minOffset = window.CONSTANS.FILTER.MIN_VALUE;
+  var maxOffset = window.CONSTANS.FILTER.MAX_VALUE;
+
+  function showSaturationSlider() {
+    saturationSlider.classList.remove('hidden');
+  }
+
+  function hideSaturationSlider() {
+    saturationSlider.classList.add('hidden');
+  }
+
+  function moveSaturationSlider(evt) {
+    evt.preventDefault();
+
+    var startX = evt.clientX;
+
+    function onMouseMove(moveEvt) {
+      moveEvt.preventDefault();
+
+      var shiftX = startX - moveEvt.clientX;
+      var sliderCoords = sliderFullLine.getBoundingClientRect();
+      var persentOffset = null;
+      var lengthSegment = startX - sliderCoords.left;
+
+      startX = moveEvt.clientX;
+
+      if (startX < sliderCoords.left) {
+        startX = sliderCoords.left;
+        persentOffset = minOffset;
+        sliderPin.style.left = minOffset + '%';
+      } else if (startX > sliderCoords.right) {
+        startX = sliderCoords.right;
+        persentOffset = maxOffset;
+        sliderPin.style.left = maxOffset + '%';
+      } else {
+        persentOffset = ((lengthSegment * maxOffset) / sliderCoords.width).toFixed(1);
+        sliderPin.style.left = (sliderPin.offsetLeft - shiftX) + 'px';
+      }
+      sliderProgressLine.style.width = sliderPin.style.left;
+
+      setFilter(persentOffset);
+    }
+
+    function onMouseUp(upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }
+
+  function setFilter(value) {
+    // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
+    var denominatorForChromeAndSepia = 100;
+    var denominatorForPhobosAndHeat = 33.3;
+
+    switch (image.className) {
+      case 'effect-none':
+        image.style.filter = '';
+        break;
+      case 'effect-chrome':
+        image.style.filter = 'grayscale(' + value / denominatorForChromeAndSepia + ')';
+        break;
+      case 'effect-sepia':
+        image.style.filter = 'sepia(' + value / denominatorForChromeAndSepia + ')';
+        break;
+      case 'effect-marvin':
+        image.style.filter = 'invert(' + value + '%)';
+        break;
+      case 'effect-phobos':
+        image.style.filter = 'blur(' + (value / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
+        break;
+      case 'effect-heat':
+        image.style.filter = 'brightness(' + (value / denominatorForPhobosAndHeat).toFixed(1) + ')';
+        break;
+    }
+  }
+
+  function setStandardFilter() {
+    uploadFormControls.querySelector('#upload-effect-none').checked = true;
+    image.className = 'effect-none';
+    image.style.transform = 'none';
+    image.style.filter = 'none';
+    hideSaturationSlider();
   }
 
 })();

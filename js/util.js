@@ -24,6 +24,11 @@
     HASHTAGS_VALIDITY: {
       MAX_HASHTAG_LENGTH: 20,
       MAX_HASHTAGS_QUANTITY: 5
+    },
+    FILTER: {
+      MIN_VALUE: 0,
+      MAX_VALUE: 100,
+      INITIAL_VALUE: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10)
     }
   };
 
