@@ -70,7 +70,6 @@
   }
 
   // Работа элементов внутри формы кадрирования
-
   function setFilterType(evt) {
     var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
 
@@ -146,6 +145,7 @@
       var shiftX = startX - moveEvt.clientX;
       var sliderCoords = sliderFullLine.getBoundingClientRect();
       var persentOffset = null;
+      var lengthSegment = startX - sliderCoords.left;
 
       startX = moveEvt.clientX;
 
@@ -158,7 +158,7 @@
         persentOffset = maxOffset;
         sliderPin.style.left = maxOffset + '%';
       } else {
-        persentOffset = ((moveEvt.offsetX * maxOffset) / sliderCoords.width).toFixed(1);
+        persentOffset = ((lengthSegment * maxOffset) / sliderCoords.width).toFixed(1);
         sliderPin.style.left = (sliderPin.offsetLeft - shiftX) + 'px';
       }
       sliderProgressLine.style.width = sliderPin.style.left;
