@@ -25,10 +25,10 @@
       MAX_HASHTAG_LENGTH: 20,
       MAX_HASHTAGS_QUANTITY: 5
     },
-    SATURATION: {
-      MIN_SATURATION: 0,
-      MAX_SATURATION: 100,
-      START_SATURATION: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10)
+    FILTER: {
+      MIN_VALUE: 0,
+      MAX_VALUE: 100,
+      INITIAL_VALUE: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10)
     }
   };
 

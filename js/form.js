@@ -29,7 +29,7 @@
     uploadFormCancel.addEventListener('keydown', closeUploadOverlayOnKeyDown);
     document.addEventListener('keydown', closeUploadOverlayOnPressEsc);
 
-    uploadFormControls.addEventListener('change', setPhotoFilter);
+    uploadFormControls.addEventListener('change', setFilterType);
     uploadForm.addEventListener('input', window.sayAboutValidity);
 
     sliderPin.addEventListener('mousedown', moveSaturationSlider);
@@ -49,7 +49,7 @@
     uploadFormCancel.removeEventListener('keydown', closeUploadOverlayOnKeyDown);
     document.removeEventListener('keydown', closeUploadOverlayOnPressEsc);
 
-    uploadFormControls.removeEventListener('change', setPhotoFilter);
+    uploadFormControls.removeEventListener('change', setFilterType);
     uploadForm.removeEventListener('input', window.sayAboutValidity);
 
     sliderPin.removeEventListener('mousedown', moveSaturationSlider);
@@ -71,8 +71,8 @@
 
   // Работа элементов внутри формы кадрирования
 
-  function setPhotoFilter(evt) {
-    var StartSaturation = window.CONSTANS.SATURATION.START_SATURATION;
+  function setFilterType(evt) {
+    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
 
     image.className = evt.target.dataset.filter;
 
@@ -82,9 +82,9 @@
       showSaturationSlider();
     }
 
-    sliderPin.style.left = StartSaturation + '%';
-    sliderProgressLine.style.width = StartSaturation + '%';
-    setFilterSaturation(StartSaturation);
+    sliderPin.style.left = startSaturation + '%';
+    sliderProgressLine.style.width = startSaturation + '%';
+    setFilter(startSaturation);
   }
 
   var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
@@ -124,14 +124,8 @@
 
   // Реализация перемещения ползунка насыщенности
   var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
-  var minOffset = window.CONSTANS.SATURATION.MIN_SATURATION;
-  var maxOffset = window.CONSTANS.SATURATION.MAX_SATURATION;
-
-  // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
-  var denominatorForChromeAndSepia = 100;
-  var denominatorForPhobosAndHeat = 33.3;
-
-  saturationSlider.classList.add('hidden');
+  var minOffset = window.CONSTANS.FILTER.MIN_VALUE;
+  var maxOffset = window.CONSTANS.FILTER.MAX_VALUE;
 
   function showSaturationSlider() {
     saturationSlider.classList.remove('hidden');
@@ -143,19 +137,17 @@
 
   function moveSaturationSlider(evt) {
     evt.preventDefault();
-    var sliderCoords = sliderFullLine.getBoundingClientRect();
+
     var startX = evt.clientX;
-    var lengthAll = sliderCoords.right - sliderCoords.left;
 
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
+
       var shiftX = startX - moveEvt.clientX;
+      var sliderCoords = sliderFullLine.getBoundingClientRect();
+      var persentOffset = null;
 
       startX = moveEvt.clientX;
-      sliderProgressLine.style.width = sliderPin.style.left;
-
-      var lengthSegment = startX - sliderCoords.left;
-      var persentOffset = null;
 
       if (startX < sliderCoords.left) {
         startX = sliderCoords.left;
@@ -166,10 +158,12 @@
         persentOffset = maxOffset;
         sliderPin.style.left = maxOffset + '%';
       } else {
-        persentOffset = ((lengthSegment * maxOffset) / lengthAll).toFixed(1);
+        persentOffset = ((moveEvt.offsetX * maxOffset) / sliderCoords.width).toFixed(1);
         sliderPin.style.left = (sliderPin.offsetLeft - shiftX) + 'px';
       }
-      setFilterSaturation(persentOffset);
+      sliderProgressLine.style.width = sliderPin.style.left;
+
+      setFilter(persentOffset);
     }
 
     function onMouseUp(upEvt) {
@@ -183,25 +177,29 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  function setFilterSaturation(saturation) {
+  function setFilter(value) {
+    // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
+    var denominatorForChromeAndSepia = 100;
+    var denominatorForPhobosAndHeat = 33.3;
+
     switch (image.className) {
       case 'effect-none':
         image.style.filter = '';
         break;
       case 'effect-chrome':
-        image.style.filter = 'grayscale(' + saturation / denominatorForChromeAndSepia + ')';
+        image.style.filter = 'grayscale(' + value / denominatorForChromeAndSepia + ')';
         break;
       case 'effect-sepia':
-        image.style.filter = 'sepia(' + saturation / denominatorForChromeAndSepia + ')';
+        image.style.filter = 'sepia(' + value / denominatorForChromeAndSepia + ')';
         break;
       case 'effect-marvin':
-        image.style.filter = 'invert(' + saturation + '%)';
+        image.style.filter = 'invert(' + value + '%)';
         break;
       case 'effect-phobos':
-        image.style.filter = 'blur(' + (saturation / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
+        image.style.filter = 'blur(' + (value / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
         break;
       case 'effect-heat':
-        image.style.filter = 'brightness(' + (saturation / denominatorForPhobosAndHeat).toFixed(1) + ')';
+        image.style.filter = 'brightness(' + (value / denominatorForPhobosAndHeat).toFixed(1) + ')';
         break;
     }
   }
