@@ -72,19 +72,8 @@
   var pictureElement = uploadForm.querySelector('img');
 
   function setFilterType(evt) {
-    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
-
     image.className = evt.target.dataset.filter;
-
-    if (image.className === 'effect-none') {
-      hideSaturationSlider();
-    } else {
-      showSaturationSlider();
-    }
-
-    sliderPin.style.left = startSaturation + '%';
-    sliderProgressLine.style.width = startSaturation + '%';
-    setFilter(startSaturation);
+    setStartSaturation();
   }
 
   function adjustScale(value) {
@@ -105,6 +94,14 @@
 
   function hideSaturationSlider() {
     saturationSlider.classList.add('hidden');
+  }
+
+  function setStartSaturation() {
+    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
+
+    sliderPin.style.left = startSaturation + '%';
+    sliderProgressLine.style.width = startSaturation + '%';
+    setFilter(startSaturation);
   }
 
   function moveSaturationSlider(evt) {
@@ -154,9 +151,12 @@
     var denominatorForChromeAndSepia = 100;
     var denominatorForPhobosAndHeat = 33.3;
 
+    showSaturationSlider();
+
     switch (image.className) {
       case 'effect-none':
         image.style.filter = '';
+        hideSaturationSlider();
         break;
       case 'effect-chrome':
         image.style.filter = 'grayscale(' + value / denominatorForChromeAndSepia + ')';
