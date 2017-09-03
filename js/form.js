@@ -34,7 +34,6 @@
 
     sliderPin.addEventListener('mousedown', moveSaturationSlider);
 
-    setInputAction(inputResize);
     setStandardFilter();
 
     window.util.hideBodyScroll();
@@ -54,7 +53,7 @@
 
     sliderPin.removeEventListener('mousedown', moveSaturationSlider);
 
-    removeInputAction(inputResize);
+    inputResize.value = inputResize.dataset.max;
 
     window.util.showBodyScroll();
   }
@@ -70,6 +69,8 @@
   }
 
   // Работа элементов внутри формы кадрирования
+  var pictureElement = uploadForm.querySelector('img');
+
   function setFilterType(evt) {
     var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
 
@@ -86,40 +87,12 @@
     setFilter(startSaturation);
   }
 
-  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
-  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
-
-  function setInputAction() {
-    buttonInc.addEventListener('click', onButtonClickIncrementValue);
-    buttonDec.addEventListener('click', onButtonClickDecrementValue);
+  function adjustScale(value) {
+    pictureElement.style.transform = 'scale(' + value / 100 + ')';
   }
 
-  function removeInputAction() {
-    buttonInc.removeEventListener('click', onButtonClickIncrementValue);
-    buttonDec.removeEventListener('click', onButtonClickDecrementValue);
-
-    inputResize.value = inputResize.dataset.max;
-  }
-
-  function onButtonClickIncrementValue() {
-    inputResize.value = parseInt(inputResize.value, 10) + parseInt(inputResize.dataset.step, 10);
-    if (inputResize.value >= parseInt(inputResize.dataset.max, 10)) {
-      inputResize.value = parseInt(inputResize.dataset.max, 10);
-    }
-    resizeImage(inputResize.value);
-  }
-
-  function onButtonClickDecrementValue() {
-    inputResize.value = parseInt(inputResize.value, 10) - parseInt(inputResize.dataset.step, 10);
-    if (inputResize.value <= parseInt(inputResize.dataset.min, 10)) {
-      inputResize.value = parseInt(inputResize.dataset.min, 10);
-    }
-    resizeImage(inputResize.value);
-  }
-
-  function resizeImage(value) {
-    uploadForm.querySelector('img').style.transform = 'scale(' + value / 100 + ')';
-  }
+  window.incrementScale(inputResize, adjustScale);
+  window.decrementScale(inputResize, adjustScale);
 
   // Реализация перемещения ползунка насыщенности
   var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
@@ -178,7 +151,6 @@
   }
 
   function setFilter(value) {
-    // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
     var denominatorForChromeAndSepia = 100;
     var denominatorForPhobosAndHeat = 33.3;
 
