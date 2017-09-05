@@ -29,12 +29,14 @@
       MIN_VALUE: 0,
       MAX_VALUE: 100,
       INITIAL_VALUE: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10),
-      NONE: 'effect-none',
-      CHROME: 'effect-chrome',
-      SEPIA: 'effect-sepia',
-      MARVIN: 'effect-marvin',
-      PHOBOS: 'effect-phobos',
-      HEAT: 'effect-heat'
+      EFFECTS: {
+        NONE: 'effect-none',
+        CHROME: 'effect-chrome',
+        SEPIA: 'effect-sepia',
+        MARVIN: 'effect-marvin',
+        PHOBOS: 'effect-phobos',
+        HEAT: 'effect-heat'
+      }
     }
   };
 

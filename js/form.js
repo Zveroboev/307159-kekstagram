@@ -2,7 +2,7 @@
 
 (function () {
   // Открытие формы обработки загруженной фотографии
-  var FILTER = window.CONSTANS.FILTER;
+  var FILTER = window.CONSTANS.FILTER.EFFECTS;
 
   var inputFile = document.querySelector('#upload-file');
   var uploadForm = document.querySelector('.upload-form');

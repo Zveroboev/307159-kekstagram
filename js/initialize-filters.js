@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var FILTER = window.CONSTANS.FILTER;
+  var FILTER = window.CONSTANS.FILTER.EFFECTS;
 
   window.setFilter = function (element, value, callback) {
     var denominatorForChromeAndSepia = 100;
