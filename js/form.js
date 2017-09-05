@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-
   // Открытие формы обработки загруженной фотографии
+  var FILTER = window.CONSTANS.FILTER;
+
   var inputFile = document.querySelector('#upload-file');
   var uploadForm = document.querySelector('.upload-form');
 
@@ -10,6 +11,8 @@
   var uploadFormControls = uploadForm.querySelector('.upload-effect-controls');
 
   var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
+  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 
   var saturationSlider = uploadForm.querySelector('.upload-effect-level');
   var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
@@ -34,10 +37,12 @@
 
     sliderPin.addEventListener('mousedown', moveSaturationSlider);
 
+    buttonInc.addEventListener('click', onIncrementClick);
+    buttonDec.addEventListener('click', onDecrementClick);
+
     setStandardFilter();
 
     window.util.hideBodyScroll();
-
   }
 
   function closeUploadOverlay() {
@@ -52,6 +57,9 @@
     uploadForm.removeEventListener('input', window.sayAboutValidity);
 
     sliderPin.removeEventListener('mousedown', moveSaturationSlider);
+
+    buttonInc.removeEventListener('click', onIncrementClick);
+    buttonDec.removeEventListener('click', onDecrementClick);
 
     inputResize.value = inputResize.dataset.max;
 
@@ -69,19 +77,22 @@
   }
 
   // Работа элементов внутри формы кадрирования
-  var pictureElement = uploadForm.querySelector('img');
-
   function setFilterType(evt) {
     image.className = evt.target.dataset.filter;
     setStartSaturation();
   }
 
-  function adjustScale(value) {
-    pictureElement.style.transform = 'scale(' + value / 100 + ')';
+  function onIncrementClick() {
+    window.incrementScale(image, adjustScale);
   }
 
-  window.incrementScale(inputResize, adjustScale);
-  window.decrementScale(inputResize, adjustScale);
+  function onDecrementClick() {
+    window.incrementScale(image, adjustScale);
+  }
+
+  function adjustScale(value) {
+    image.style.transform = 'scale(' + value / 100 + ')';
+  }
 
   // Реализация перемещения ползунка насыщенности
   var sliderFullLine = saturationSlider.querySelector('.upload-effect-level-line');
@@ -96,12 +107,21 @@
     saturationSlider.classList.add('hidden');
   }
 
+  function setSaturationSlider() {
+    if (image.className === FILTER.NONE) {
+      hideSaturationSlider();
+      return;
+    }
+
+    showSaturationSlider();
+  }
+
   function setStartSaturation() {
     var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
 
     sliderPin.style.left = startSaturation + '%';
     sliderProgressLine.style.width = startSaturation + '%';
-    setFilter(startSaturation);
+    window.setFilter(image, startSaturation, setSaturationSlider);
   }
 
   function moveSaturationSlider(evt) {
@@ -133,7 +153,7 @@
       }
       sliderProgressLine.style.width = sliderPin.style.left;
 
-      setFilter(persentOffset);
+      window.setFilter(image, persentOffset, setSaturationSlider);
     }
 
     function onMouseUp(upEvt) {
@@ -147,38 +167,9 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  function setFilter(value) {
-    var denominatorForChromeAndSepia = 100;
-    var denominatorForPhobosAndHeat = 33.3;
-
-    showSaturationSlider();
-
-    switch (image.className) {
-      case 'effect-none':
-        image.style.filter = '';
-        hideSaturationSlider();
-        break;
-      case 'effect-chrome':
-        image.style.filter = 'grayscale(' + value / denominatorForChromeAndSepia + ')';
-        break;
-      case 'effect-sepia':
-        image.style.filter = 'sepia(' + value / denominatorForChromeAndSepia + ')';
-        break;
-      case 'effect-marvin':
-        image.style.filter = 'invert(' + value + '%)';
-        break;
-      case 'effect-phobos':
-        image.style.filter = 'blur(' + (value / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
-        break;
-      case 'effect-heat':
-        image.style.filter = 'brightness(' + (value / denominatorForPhobosAndHeat).toFixed(1) + ')';
-        break;
-    }
-  }
-
   function setStandardFilter() {
     uploadFormControls.querySelector('#upload-effect-none').checked = true;
-    image.className = 'effect-none';
+    image.className = FILTER.NONE;
     image.style.transform = 'none';
     image.style.filter = 'none';
     hideSaturationSlider();
