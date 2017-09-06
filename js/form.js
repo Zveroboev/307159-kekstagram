@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-
   // Открытие формы обработки загруженной фотографии
+  var FILTER = window.CONSTANS.FILTER.EFFECTS;
+
   var inputFile = document.querySelector('#upload-file');
   var uploadForm = document.querySelector('.upload-form');
 
@@ -10,6 +11,8 @@
   var uploadFormControls = uploadForm.querySelector('.upload-effect-controls');
 
   var inputResize = uploadForm.querySelector('.upload-resize-controls-value');
+  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
+  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
 
   var saturationSlider = uploadForm.querySelector('.upload-effect-level');
   var sliderPin = saturationSlider.querySelector('.upload-effect-level-pin');
@@ -34,11 +37,12 @@
 
     sliderPin.addEventListener('mousedown', moveSaturationSlider);
 
-    setInputAction(inputResize);
+    buttonInc.addEventListener('click', onIncrementClick);
+    buttonDec.addEventListener('click', onDecrementClick);
+
     setStandardFilter();
 
     window.util.hideBodyScroll();
-
   }
 
   function closeUploadOverlay() {
@@ -54,7 +58,10 @@
 
     sliderPin.removeEventListener('mousedown', moveSaturationSlider);
 
-    removeInputAction(inputResize);
+    buttonInc.removeEventListener('click', onIncrementClick);
+    buttonDec.removeEventListener('click', onDecrementClick);
+
+    inputResize.value = inputResize.dataset.max;
 
     window.util.showBodyScroll();
   }
@@ -71,54 +78,20 @@
 
   // Работа элементов внутри формы кадрирования
   function setFilterType(evt) {
-    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
-
     image.className = evt.target.dataset.filter;
-
-    if (image.className === 'effect-none') {
-      hideSaturationSlider();
-    } else {
-      showSaturationSlider();
-    }
-
-    sliderPin.style.left = startSaturation + '%';
-    sliderProgressLine.style.width = startSaturation + '%';
-    setFilter(startSaturation);
+    setStartSaturation();
   }
 
-  var buttonInc = uploadForm.querySelector('.upload-resize-controls-button-inc');
-  var buttonDec = uploadForm.querySelector('.upload-resize-controls-button-dec');
-
-  function setInputAction() {
-    buttonInc.addEventListener('click', onButtonClickIncrementValue);
-    buttonDec.addEventListener('click', onButtonClickDecrementValue);
+  function onIncrementClick() {
+    window.incrementScale(image, adjustScale);
   }
 
-  function removeInputAction() {
-    buttonInc.removeEventListener('click', onButtonClickIncrementValue);
-    buttonDec.removeEventListener('click', onButtonClickDecrementValue);
-
-    inputResize.value = inputResize.dataset.max;
+  function onDecrementClick() {
+    window.incrementScale(image, adjustScale);
   }
 
-  function onButtonClickIncrementValue() {
-    inputResize.value = parseInt(inputResize.value, 10) + parseInt(inputResize.dataset.step, 10);
-    if (inputResize.value >= parseInt(inputResize.dataset.max, 10)) {
-      inputResize.value = parseInt(inputResize.dataset.max, 10);
-    }
-    resizeImage(inputResize.value);
-  }
-
-  function onButtonClickDecrementValue() {
-    inputResize.value = parseInt(inputResize.value, 10) - parseInt(inputResize.dataset.step, 10);
-    if (inputResize.value <= parseInt(inputResize.dataset.min, 10)) {
-      inputResize.value = parseInt(inputResize.dataset.min, 10);
-    }
-    resizeImage(inputResize.value);
-  }
-
-  function resizeImage(value) {
-    uploadForm.querySelector('img').style.transform = 'scale(' + value / 100 + ')';
+  function adjustScale(value) {
+    image.style.transform = 'scale(' + value / 100 + ')';
   }
 
   // Реализация перемещения ползунка насыщенности
@@ -132,6 +105,23 @@
 
   function hideSaturationSlider() {
     saturationSlider.classList.add('hidden');
+  }
+
+  function setSaturationSlider() {
+    if (image.className === FILTER.NONE) {
+      hideSaturationSlider();
+      return;
+    }
+
+    showSaturationSlider();
+  }
+
+  function setStartSaturation() {
+    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
+
+    sliderPin.style.left = startSaturation + '%';
+    sliderProgressLine.style.width = startSaturation + '%';
+    window.setFilter(image, startSaturation, setSaturationSlider);
   }
 
   function moveSaturationSlider(evt) {
@@ -163,7 +153,7 @@
       }
       sliderProgressLine.style.width = sliderPin.style.left;
 
-      setFilter(persentOffset);
+      window.setFilter(image, persentOffset, setSaturationSlider);
     }
 
     function onMouseUp(upEvt) {
@@ -177,36 +167,9 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  function setFilter(value) {
-    // Я долго думал над тем, как назвать эти делители. В итоге ничего кроме этой жуткой штуки не придумал.
-    var denominatorForChromeAndSepia = 100;
-    var denominatorForPhobosAndHeat = 33.3;
-
-    switch (image.className) {
-      case 'effect-none':
-        image.style.filter = '';
-        break;
-      case 'effect-chrome':
-        image.style.filter = 'grayscale(' + value / denominatorForChromeAndSepia + ')';
-        break;
-      case 'effect-sepia':
-        image.style.filter = 'sepia(' + value / denominatorForChromeAndSepia + ')';
-        break;
-      case 'effect-marvin':
-        image.style.filter = 'invert(' + value + '%)';
-        break;
-      case 'effect-phobos':
-        image.style.filter = 'blur(' + (value / denominatorForPhobosAndHeat).toFixed(1) + 'px)';
-        break;
-      case 'effect-heat':
-        image.style.filter = 'brightness(' + (value / denominatorForPhobosAndHeat).toFixed(1) + ')';
-        break;
-    }
-  }
-
   function setStandardFilter() {
     uploadFormControls.querySelector('#upload-effect-none').checked = true;
-    image.className = 'effect-none';
+    image.className = FILTER.NONE;
     image.style.transform = 'none';
     image.style.filter = 'none';
     hideSaturationSlider();
