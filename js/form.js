@@ -40,6 +40,8 @@
     buttonInc.addEventListener('click', onIncrementClick);
     buttonDec.addEventListener('click', onDecrementClick);
 
+    uploadForm.addEventListener('submit', submitForm);
+
     setStandardFilter();
 
     window.util.hideBodyScroll();
@@ -61,9 +63,16 @@
     buttonInc.removeEventListener('click', onIncrementClick);
     buttonDec.removeEventListener('click', onDecrementClick);
 
+    uploadForm.removeEventListener('submit', submitForm);
+
     inputResize.value = inputResize.dataset.max;
 
     window.util.showBodyScroll();
+  }
+
+  function submitForm(evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(uploadForm), closeUploadOverlay, window.util.showError);
   }
 
   function closeUploadOverlayOnKeyDown(evt) {
@@ -83,11 +92,11 @@
   }
 
   function onIncrementClick() {
-    window.incrementScale(image, adjustScale);
+    window.incrementScale(inputResize, adjustScale);
   }
 
   function onDecrementClick() {
-    window.incrementScale(image, adjustScale);
+    window.decrementScale(inputResize, adjustScale);
   }
 
   function adjustScale(value) {
