@@ -2,24 +2,26 @@
 
 (function () {
 
+  function showError(errorMessage) {
+    var node = document.createElement('div');
+    node.style.zIndex = 100;
+    node.style.margin = '0 auto';
+    node.style.textAlign = 'center';
+    node.style.backgroundColor = 'yellow';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.style.color = 'black';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  }
+
   window.CONSTANS = {
     KEYCODES: {
       ESC_KEYCODE: 27,
-      ENTER_KEYCODE: 13,
-      SPACE_KEYCODE: 32
-    },
-    POSTS_ATTRIBUTES: {
-      MIN_LIKES: 15,
-      MAX_LIKES: 200,
-      PHOTO_QUANTITY: 26,
-      PICTURES_COMMENTS: [
-        'Всё отлично!',
-        'В целом всё неплохо. Но не всё.',
-        'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-        'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-        'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-        'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-      ]
+      ENTER_KEYCODE: 13
     },
     HASHTAGS_VALIDITY: {
       MAX_HASHTAG_LENGTH: 20,
@@ -57,12 +59,7 @@
         action(evt);
       }
     },
-    getRandomValueInRange: function (min, max) {
-      return Math.floor(Math.random() * ((max + 1) - min)) + min;
-    },
-    getRandomIndex: function (number) {
-      return Math.floor(Math.random() * number);
-    }
+    showError: showError
   };
 
 })();

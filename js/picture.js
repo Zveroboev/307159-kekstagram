@@ -2,28 +2,25 @@
 
 // Отрисовка миниатюры с постами на index.html
 (function () {
-
-  var POST = window.CONSTANS.POSTS_ATTRIBUTES;
-
-  function renderPostStructure(posts) {
+  function renderPostStructure(post) {
     var postStructure = document.querySelector('#picture-template').content.cloneNode(true);
 
-    postStructure.querySelector('img').setAttribute('src', posts.url);
-    postStructure.querySelector('.picture-likes').textContent = posts.likes.toString();
-    postStructure.querySelector('.picture-comments').textContent = posts.comment.length.toString();
+    postStructure.querySelector('img').setAttribute('src', post.url);
+    postStructure.querySelector('.picture-likes').textContent = post.likes.toString();
+    postStructure.querySelector('.picture-comments').textContent = post.comments.length.toString();
 
     return postStructure;
   }
 
-  function renderPosts() {
+  function renderPosts(array) {
     var picturesElement = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < POST.PHOTO_QUANTITY; i++) {
-      fragment.appendChild(renderPostStructure(window.posts[i]));
+    for (var i = 0; i < array.length; i++) {
+      fragment.appendChild(renderPostStructure(array[i]));
     }
     picturesElement.appendChild(fragment);
   }
 
-  renderPosts();
+  window.backend.load(renderPosts, window.util.showError);
 })();
