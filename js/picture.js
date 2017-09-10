@@ -2,11 +2,7 @@
 
 // Отрисовка миниатюры с постами на index.html
 (function () {
-  var QUANTITY_RANDOM_POSTS = 16;
-  var RECOMENDED_FILTER = 'recommend';
-  var POPULAR_FILTER = 'popular';
-  var DISCUSSED_FILTER = 'discussed';
-  var RANDOM_FILTER = 'random';
+  var POSTS = window.CONSTANS.POSTS;
 
   var posts = [];
   var filters = document.querySelector('.filters');
@@ -23,19 +19,21 @@
     });
   }
 
-  function getRandomSortedArray(array, quantity) {
-    quantity = quantity > array.length ? array.length : quantity;
+  function getRandomSortedArray(array,) {
+    var quantity = POSTS.QUANTITY_RANDOM_FILTER > array.length ? array.length : POSTS.QUANTITY_RANDOM_FILTER;
 
     var sortedArray = [];
     var repeatedIndexes = [];
+    var i = 0;
 
-    for (var i = 0; i < quantity; i++) {
+    while (i < quantity) {
       do {
         var randomIndex = window.util.getRandomIndex(array.length);
       } while (repeatedIndexes.indexOf(randomIndex) !== -1);
 
       sortedArray.push(array[randomIndex]);
       repeatedIndexes.push(randomIndex);
+      i++;
     }
     return sortedArray;
   }
@@ -72,17 +70,17 @@
     evt.preventDefault();
 
     switch (evt.target.value) {
-      case RECOMENDED_FILTER:
+      case POSTS.RECOMENDED_FILTER:
         window.debounce(renderPosts(posts));
         break;
-      case POPULAR_FILTER:
+      case POSTS.POPULAR_FILTER:
         window.debounce(window.sorting(posts, getPopularSortedArray, renderPosts));
         break;
-      case DISCUSSED_FILTER:
+      case POSTS.DISCUSSED_FILTER:
         window.debounce(window.sorting(posts, getDiscussedSortedArray, renderPosts));
         break;
-      case RANDOM_FILTER:
-        window.debounce(window.sorting(posts, getRandomSortedArray, renderPosts, QUANTITY_RANDOM_POSTS));
+      case POSTS.RANDOM_FILTER:
+        window.debounce(window.sorting(posts, getRandomSortedArray, renderPosts));
         break;
     }
   }

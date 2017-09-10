@@ -20,12 +20,12 @@
 
   window.CONSTANS = {
     KEYCODES: {
-      ESC_KEYCODE: 27,
+      ESC: 27,
       ENTER_KEYCODE: 13
     },
     HASHTAGS_VALIDITY: {
-      MAX_HASHTAG_LENGTH: 20,
-      MAX_HASHTAGS_QUANTITY: 5
+      MAX_LENGTH: 20,
+      MAX_QUANTITY: 5
     },
     FILTER: {
       MIN_VALUE: 0,
@@ -39,6 +39,13 @@
         PHOBOS: 'effect-phobos',
         HEAT: 'effect-heat'
       }
+    },
+    POSTS: {
+      QUANTITY_RANDOM_FILTER: 16,
+      RECOMENDED_FILTER: 'recommend',
+      POPULAR_FILTER: 'popular',
+      DISCUSSED_FILTER: 'discussed',
+      RANDOM_FILTER: 'random'
     }
   };
 
