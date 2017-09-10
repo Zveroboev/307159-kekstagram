@@ -71,16 +71,24 @@
 
     switch (evt.target.value) {
       case POSTS.RECOMENDED_FILTER:
-        window.debounce(renderPosts(posts));
+        window.debounce(function () {
+          renderPosts(posts);
+        });
         break;
       case POSTS.POPULAR_FILTER:
-        window.debounce(window.sorting(posts, getPopularSortedArray, renderPosts));
+        window.debounce(function () {
+          window.sorting(posts, getPopularSortedArray, renderPosts);
+        });
         break;
       case POSTS.DISCUSSED_FILTER:
-        window.debounce(window.sorting(posts, getDiscussedSortedArray, renderPosts));
+        window.debounce(function () {
+          window.sorting(posts, getDiscussedSortedArray, renderPosts);
+        });
         break;
       case POSTS.RANDOM_FILTER:
-        window.debounce(window.sorting(posts, getRandomSortedArray, renderPosts));
+        window.debounce(function () {
+          window.sorting(posts, getRandomSortedArray, renderPosts);
+        });
         break;
     }
   }
