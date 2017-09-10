@@ -59,6 +59,9 @@
         action(evt);
       }
     },
+    getRandomIndex: function (number) {
+      return Math.floor(Math.random() * number);
+    },
     showError: showError
   };
 
