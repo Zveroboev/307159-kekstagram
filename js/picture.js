@@ -19,7 +19,7 @@
     });
   }
 
-  function getRandomSortedArray(array,) {
+  function getRandomSortedArray(array) {
     var quantity = POSTS.QUANTITY_RANDOM_FILTER > array.length ? array.length : POSTS.QUANTITY_RANDOM_FILTER;
 
     var sortedArray = [];
