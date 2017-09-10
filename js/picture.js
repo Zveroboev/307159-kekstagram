@@ -73,16 +73,16 @@
 
     switch (evt.target.value) {
       case RECOMENDED_FILTER:
-        renderPosts(posts);
+        window.debounce(renderPosts(posts));
         break;
       case POPULAR_FILTER:
-        window.sorting(posts, getPopularSortedArray, renderPosts);
+        window.debounce(window.sorting(posts, getPopularSortedArray, renderPosts));
         break;
       case DISCUSSED_FILTER:
-        window.sorting(posts, getDiscussedSortedArray, renderPosts);
+        window.debounce(window.sorting(posts, getDiscussedSortedArray, renderPosts));
         break;
       case RANDOM_FILTER:
-        window.sorting(posts, getRandomSortedArray, renderPosts, QUANTITY_RANDOM_POSTS);
+        window.debounce(window.sorting(posts, getRandomSortedArray, renderPosts, QUANTITY_RANDOM_POSTS));
         break;
     }
   }
