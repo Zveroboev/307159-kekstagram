@@ -24,16 +24,14 @@
 
     var sortedArray = [];
     var repeatedIndexes = [];
-    var i = 0;
+    var randomIndex = window.util.getRandomIndex(array.length);
 
-    while (i < quantity) {
-      do {
-        var randomIndex = window.util.getRandomIndex(array.length);
-      } while (repeatedIndexes.indexOf(randomIndex) !== -1);
-
+    for (var i = 0; i < quantity; i++) {
+      while (repeatedIndexes.indexOf(randomIndex) !== -1) {
+        randomIndex = window.util.getRandomIndex(array.length);
+      }
       sortedArray.push(array[randomIndex]);
       repeatedIndexes.push(randomIndex);
-      i++;
     }
     return sortedArray;
   }
