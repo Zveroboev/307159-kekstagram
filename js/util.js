@@ -21,7 +21,7 @@
   window.CONSTANS = {
     KEYCODES: {
       ESC: 27,
-      ENTER_KEYCODE: 13
+      ENTER: 13
     },
     HASHTAGS_VALIDITY: {
       MAX_LENGTH: 20,
@@ -57,12 +57,12 @@
       document.body.style.overflow = 'auto';
     },
     isEscEvent: function (evt, action) {
-      if (evt.keyCode === window.CONSTANS.KEYCODES.ESC_KEYCODE) {
+      if (evt.keyCode === window.CONSTANS.KEYCODES.ESC) {
         action(evt);
       }
     },
     isEnterEvent: function (evt, action) {
-      if (evt.keyCode === window.CONSTANS.KEYCODES.ENTER_KEYCODE) {
+      if (evt.keyCode === window.CONSTANS.KEYCODES.ENTER) {
         action(evt);
       }
     },
