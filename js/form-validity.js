@@ -63,10 +63,10 @@
 
     var arrayWithHashtags = evt.target.value.split(' ');
 
-    if (arrayWithHashtags.length > HASHTAG.MAX_HASHTAGS_QUANTITY) {
-      evt.target.setCustomValidity('Максимум можно использовать' + HASHTAG.MAX_HASHTAGS_QUANTITY + 'хеш-тегов');
-    } else if (validity.hasLongElements(arrayWithHashtags, HASHTAG.MAX_HASHTAG_LENGTH)) {
-      evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASHTAG.MAX_HASHTAG_LENGTH + 'символов');
+    if (arrayWithHashtags.length > HASHTAG.MAX_QUANTITY) {
+      evt.target.setCustomValidity('Максимум можно использовать' + HASHTAG.MAX_QUANTITY + 'хеш-тегов');
+    } else if (validity.hasLongElements(arrayWithHashtags, HASHTAG.MAX_LENGTH)) {
+      evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASHTAG.MAX_LENGTH + 'символов');
     } else if (validity.hasElementsWithoutSharp(arrayWithHashtags)) {
       evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
     } else if (validity.hasElementsWithSeveralSharp(arrayWithHashtags)) {
