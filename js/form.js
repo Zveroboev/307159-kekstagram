@@ -23,7 +23,6 @@
   window.inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
   fileChooser.addEventListener('change', function () {
-    debugger;
     window.onFileChange(fileChooser, image, openUploadOverlay);
   });
 

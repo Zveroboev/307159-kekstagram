@@ -3,8 +3,7 @@
 (function () {
 
   window.sorting = function (array, sorting, callback) {
-    var sortedArray = sorting(array);
-
-    callback(sortedArray);
+    callback(sorting(array));
   };
+
 })();
