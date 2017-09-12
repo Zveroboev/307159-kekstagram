@@ -2,12 +2,17 @@
 
 (function () {
 
-  function showError(errorMessage, xhr) {
+  function showError(errorMessage, method) {
     var node = document.createElement('div');
 
     node.textContent = errorMessage;
     node.classList.add('error-message');
     document.body.insertAdjacentElement('afterbegin', node);
+    if (method === 'POST') {
+      setTimeout(function () {
+        node.parentNode.removeChild(node);
+      }, 5000);
+    }
   }
 
   window.CONSTANS = {
