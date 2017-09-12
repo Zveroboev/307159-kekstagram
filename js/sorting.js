@@ -3,7 +3,7 @@
 (function () {
 
   window.getSortedArray = function (array, sorting, callback) {
-    callback(getSortedArray(array));
+    callback(sorting(array));
   };
 
 })();
