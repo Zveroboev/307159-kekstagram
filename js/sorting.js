@@ -2,8 +2,8 @@
 
 (function () {
 
-  window.sorting = function (array, sorting, callback) {
-    callback(sorting(array));
+  window.getSortedArray = function (array, sorting, callback) {
+    callback(getSortedArray(array));
   };
 
 })();

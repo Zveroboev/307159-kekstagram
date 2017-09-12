@@ -22,7 +22,7 @@
     FILTER: {
       MIN_VALUE: 0,
       MAX_VALUE: 100,
-      INITIAL_VALUE: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10),
+      GET_INITIAL_VALUE: parseInt(getComputedStyle(document.querySelector('.upload-effect-level-pin')).left, 10),
       EFFECTS: {
         NONE: 'effect-none',
         CHROME: 'effect-chrome',
@@ -48,12 +48,12 @@
     showBodyScroll: function () {
       document.body.style.overflow = 'auto';
     },
-    isEscEvent: function (evt, action) {
+    pressEsc: function (evt, action) {
       if (evt.keyCode === window.CONSTANS.KEYCODES.ESC) {
         action(evt);
       }
     },
-    isEnterEvent: function (evt, action) {
+    pressEnter: function (evt, action) {
       if (evt.keyCode === window.CONSTANS.KEYCODES.ENTER) {
         action(evt);
       }

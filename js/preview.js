@@ -29,15 +29,15 @@
   }
 
   function openPopupOnKeyDown(evt) {
-    window.util.isEnterEvent(evt, openPopup);
+    window.util.pressEnter(evt, openPopup);
   }
 
   function closePopupOnKeyDown(evt) {
-    window.util.isEnterEvent(evt, closePopup);
+    window.util.pressEnter(evt, closePopup);
   }
 
   function closePopupOnPressEsc(evt) {
-    window.util.isEscEvent(evt, closePopup);
+    window.util.pressEsc(evt, closePopup);
   }
 
   function addEventsForOpeningPopup() {

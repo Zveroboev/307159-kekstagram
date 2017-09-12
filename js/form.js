@@ -78,12 +78,12 @@
   }
 
   function closeUploadOverlayOnKeyDown(evt) {
-    window.util.isEnterEvent(evt, closeUploadOverlay);
+    window.util.pressEnter(evt, closeUploadOverlay);
   }
 
   function closeUploadOverlayOnPressEsc(evt) {
     if (evt.target !== window.inputDescription && evt.target !== window.inputHashtags) {
-      window.util.isEscEvent(evt, closeUploadOverlay);
+      window.util.pressEsc(evt, closeUploadOverlay);
     }
   }
 
@@ -94,11 +94,11 @@
   }
 
   function onIncrementClick() {
-    window.incrementScale(inputResize, adjustScale);
+    window.pressIncrementScale(inputResize, adjustScale);
   }
 
   function onDecrementClick() {
-    window.decrementScale(inputResize, adjustScale);
+    window.pressDecrementScale(inputResize, adjustScale);
   }
 
   function adjustScale(value) {
@@ -128,7 +128,7 @@
   }
 
   function setStartSaturation() {
-    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
+    var startSaturation = window.CONSTANS.FILTER.GET_INITIAL_VALUE;
 
     sliderPin.style.left = startSaturation + '%';
     sliderProgressLine.style.width = startSaturation + '%';
