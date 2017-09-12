@@ -4,7 +4,7 @@
   // Открытие формы обработки загруженной фотографии
   var FILTER = window.CONSTANS.FILTER.EFFECTS;
 
-  var inputFile = document.querySelector('#upload-file');
+  var fileChooser = document.querySelector('#upload-file');
   var uploadForm = document.querySelector('.upload-form');
 
   var uploadFormCancel = uploadForm.querySelector('.upload-form-cancel');
@@ -22,7 +22,10 @@
   window.inputDescription = uploadForm.querySelector('.upload-form-description');
   window.inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
-  inputFile.addEventListener('change', openUploadOverlay);
+  fileChooser.addEventListener('change', function () {
+    debugger;
+    window.onFileChange(fileChooser, image, openUploadOverlay);
+  });
 
   function openUploadOverlay() {
     uploadForm.querySelector('.upload-image').classList.add('hidden');
