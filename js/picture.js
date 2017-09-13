@@ -69,23 +69,23 @@
 
     switch (evt.target.value) {
       case POSTS.RECOMENDED_FILTER:
-        window.debounce(function () {
+        window.setDelay(function () {
           renderPosts(posts);
         });
         break;
       case POSTS.POPULAR_FILTER:
-        window.debounce(function () {
-          window.sorting(posts, getPopularSortedArray, renderPosts);
+        window.setDelay(function () {
+          window.getSortedArray(posts, getPopularSortedArray, renderPosts);
         });
         break;
       case POSTS.DISCUSSED_FILTER:
-        window.debounce(function () {
-          window.sorting(posts, getDiscussedSortedArray, renderPosts);
+        window.setDelay(function () {
+          window.getSortedArray(posts, getDiscussedSortedArray, renderPosts);
         });
         break;
       case POSTS.RANDOM_FILTER:
-        window.debounce(function () {
-          window.sorting(posts, getRandomSortedArray, renderPosts);
+        window.setDelay(function () {
+          window.getSortedArray(posts, getRandomSortedArray, renderPosts);
         });
         break;
     }

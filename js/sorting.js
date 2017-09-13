@@ -2,9 +2,8 @@
 
 (function () {
 
-  window.sorting = function (array, sorting, callback) {
-    var sortedArray = sorting(array);
-
-    callback(sortedArray);
+  window.getSortedArray = function (array, sorting, callback) {
+    callback(sorting(array));
   };
+
 })();

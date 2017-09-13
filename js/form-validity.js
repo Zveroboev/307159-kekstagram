@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var HASHTAG = window.CONSTANS.HASHTAGS_VALIDITY;
 
   // Дополнительные функции для валидации хеш-тегов
   var validity = {
@@ -14,6 +15,14 @@
     hasElementsWithoutSharp: function (array) {
       for (var i = 0; i < array.length; i++) {
         if (array[i].slice(0, 1) !== '#' && array[i].trim().length > 0) {
+          return true;
+        }
+      }
+      return false;
+    },
+    hasOnlySharp: function (array) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i].slice(0, 1) === '#' && array[i].length === 1) {
           return true;
         }
       }
@@ -42,18 +51,12 @@
 
 // Валидация текстового поля ввода комментария
   function sayAboutValidityDescription(evt) {
-    if (evt.target.validity.tooShort) {
-      evt.target.setCustomValidity('Поле должно содержать минимум: ' + evt.target.minLength + ' символов');
-    } else if (evt.target.validity.tooLong) {
+    if (evt.target.validity.tooLong) {
       evt.target.setCustomValidity('Поле должно содержать максимум: ' + evt.target.maxLength + ' символов');
-    } else if (evt.target.validity.valueMissing) {
-      evt.target.setCustomValidity('Введите комментарий');
     } else {
       evt.target.setCustomValidity('');
     }
   }
-
-  var HASHTAG = window.CONSTANS.HASHTAGS_VALIDITY;
 
 // Валидация поля ввода хеш-тегов
   function sayAboutValidityHashtags(evt) {
@@ -69,6 +72,8 @@
       evt.target.setCustomValidity('Максимальная длина одного хэш-тега' + HASHTAG.MAX_LENGTH + 'символов');
     } else if (validity.hasElementsWithoutSharp(arrayWithHashtags)) {
       evt.target.setCustomValidity('Хэш-тег начинается с символа `#`');
+    } else if (validity.hasOnlySharp(arrayWithHashtags)) {
+      evt.target.setCustomValidity('Хэш-тег не может состоять только из символа `#`');
     } else if (validity.hasElementsWithSeveralSharp(arrayWithHashtags)) {
       evt.target.setCustomValidity('Хэш-теги разделяются пробелами');
     } else if (validity.hasDuplicateElement(arrayWithHashtags)) {

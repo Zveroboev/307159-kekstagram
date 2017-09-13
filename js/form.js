@@ -4,7 +4,7 @@
   // Открытие формы обработки загруженной фотографии
   var FILTER = window.CONSTANS.FILTER.EFFECTS;
 
-  var inputFile = document.querySelector('#upload-file');
+  var fileChooser = document.querySelector('#upload-file');
   var uploadForm = document.querySelector('.upload-form');
 
   var uploadFormCancel = uploadForm.querySelector('.upload-form-cancel');
@@ -22,7 +22,9 @@
   window.inputDescription = uploadForm.querySelector('.upload-form-description');
   window.inputHashtags = uploadForm.querySelector('.upload-form-hashtags');
 
-  inputFile.addEventListener('change', openUploadOverlay);
+  fileChooser.addEventListener('change', function () {
+    window.onFileChange(fileChooser, image, openUploadOverlay);
+  });
 
   function openUploadOverlay() {
     uploadForm.querySelector('.upload-image').classList.add('hidden');
@@ -76,12 +78,12 @@
   }
 
   function closeUploadOverlayOnKeyDown(evt) {
-    window.util.isEnterEvent(evt, closeUploadOverlay);
+    window.util.pressEnter(evt, closeUploadOverlay);
   }
 
   function closeUploadOverlayOnPressEsc(evt) {
     if (evt.target !== window.inputDescription && evt.target !== window.inputHashtags) {
-      window.util.isEscEvent(evt, closeUploadOverlay);
+      window.util.pressEsc(evt, closeUploadOverlay);
     }
   }
 
@@ -92,11 +94,11 @@
   }
 
   function onIncrementClick() {
-    window.incrementScale(inputResize, adjustScale);
+    window.pressIncrementScale(inputResize, adjustScale);
   }
 
   function onDecrementClick() {
-    window.decrementScale(inputResize, adjustScale);
+    window.pressDecrementScale(inputResize, adjustScale);
   }
 
   function adjustScale(value) {
@@ -126,7 +128,7 @@
   }
 
   function setStartSaturation() {
-    var startSaturation = window.CONSTANS.FILTER.INITIAL_VALUE;
+    var startSaturation = window.CONSTANS.FILTER.GET_INITIAL_VALUE;
 
     sliderPin.style.left = startSaturation + '%';
     sliderProgressLine.style.width = startSaturation + '%';
