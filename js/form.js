@@ -44,7 +44,7 @@
 
     uploadForm.addEventListener('submit', submitForm);
 
-    setStandardFilter();
+    setStandardForm();
 
     window.util.hideBodyScroll();
   }
@@ -178,8 +178,10 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  function setStandardFilter() {
+  function setStandardForm() {
     uploadFormControls.querySelector('#upload-effect-none').checked = true;
+    uploadForm.querySelector('.upload-form-hashtags').value = '';
+    uploadForm.querySelector('.upload-form-description').value = '';
     image.className = FILTER.NONE;
     image.style.transform = 'none';
     image.style.filter = 'none';
